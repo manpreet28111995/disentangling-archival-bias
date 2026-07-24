@@ -31,7 +31,7 @@ The pipeline isolates demographic main effects (artist gender) from structural c
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/disentangling-archival-bias.git
+git clone https://github.com/manpreet28111995/disentangling-archival-bias.git
 cd disentangling-archival-bias
 
 # Create and activate virtual environment
@@ -80,10 +80,6 @@ python openclip_audit.py --in results/met_metadata_enriched.csv --out-dir result
 
 ```
 .
-├── Paper/
-│   ├── Paper.tex                  # Primary LaTeX manuscript (Springer sn-jnl template)
-│   ├── Bibliography.bib           # Complete BibTeX citations
-│   └── Paper.pdf                  # Compiled manuscript PDF
 ├── fetch_met_data.py              # Met Open Access API harvester with caching
 ├── analyze_representation.py      # Demographic resolution & archival audit script
 ├── clip_audit.py                  # OpenAI CLIP (ViT-B/32) audit engine
