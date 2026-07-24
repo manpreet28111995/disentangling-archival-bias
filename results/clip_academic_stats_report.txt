@@ -1,0 +1,50 @@
+============================================================
+ACADEMIC BIAS AUDIT REPORT: CLIP ARTISTIC VALUE SCORES
+============================================================
+
+1. NON-PARAMETRIC TEST (MALE vs FEMALE)
+   Male (N=68): mean=-0.0008, std=0.0579
+   Female (N=28): mean=0.0107, std=0.0281
+   Mann-Whitney U = 867.00, p-value = 4.9579e-01
+   Rank-Biserial Correlation r = 0.0893
+
+2. BOOTSTRAP 95% CONFIDENCE INTERVAL (MALE MEAN - FEMALE MEAN)
+   Mean Difference = -0.0114
+   95% CI = [-0.0307, 0.0039]
+
+3. PROMPT SET ROBUSTNESS CHECK
+   [set_1_masterpiece] Male mean=-0.0033 | Female mean=-0.0050 | p=0.3156 | r=-0.1313
+   [set_2_quality] Male mean=0.0314 | Female mean=0.0497 | p=0.1227 | r=0.2017
+   [set_3_influence] Male mean=-0.0303 | Female mean=-0.0127 | p=0.0292 | r=-0.2847
+
+4. MULTIVARIATE OLS REGRESSION (CONFOUND CONTROL)
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:       mean_value_score   R-squared:                       0.450
+Model:                            OLS   Adj. R-squared:                  0.412
+Method:                 Least Squares   F-statistic:                     12.11
+Date:                Fri, 24 Jul 2026   Prob (F-statistic):           6.56e-10
+Time:                        10:20:57   Log-Likelihood:                 178.29
+No. Observations:                  96   AIC:                            -342.6
+Df Residuals:                      89   BIC:                            -324.6
+Df Model:                           6                                         
+Covariance Type:            nonrobust                                         
+===================================================================================================
+                                      coef    std err          t      P>|t|      [0.025      0.975]
+---------------------------------------------------------------------------------------------------
+Intercept                          -0.0099      0.021     -0.473      0.637      -0.051       0.032
+C(inferred_gender)[T.male]         -0.0157      0.009     -1.701      0.092      -0.034       0.003
+C(medium_category)[T.other]         0.0018      0.028      0.067      0.947      -0.053       0.057
+C(medium_category)[T.painting]      0.0142      0.017      0.849      0.398      -0.019       0.047
+C(medium_category)[T.print]        -0.0268      0.019     -1.409      0.162      -0.065       0.011
+C(medium_category)[T.sculpture]    -0.2873      0.042     -6.772      0.000      -0.372      -0.203
+aspect_ratio                        0.0201      0.011      1.797      0.076      -0.002       0.042
+==============================================================================
+Omnibus:                       86.106   Durbin-Watson:                   2.411
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):             2055.034
+Skew:                          -2.368   Prob(JB):                         0.00
+Kurtosis:                      25.166   Cond. No.                         20.6
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
