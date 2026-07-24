@@ -31,8 +31,8 @@ The pipeline isolates demographic main effects (artist gender) from structural c
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/vlm-archival-bias-audit.git
-cd vlm-archival-bias-audit
+git clone https://github.com/your-username/disentangling-archival-bias.git
+cd disentangling-archival-bias
 
 # Create and activate virtual environment
 python -m venv venv
