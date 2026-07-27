@@ -48,11 +48,14 @@ def infer_gender(display_name):
 
 
 def resolve_gender(row):
-    """Prefer Met's own artistGender field; fall back to name-based inference."""
+    """Prefer Met's own artistGender field if populated; fall back to name-based inference.
+    Note: Met Open Access dataset populates artistGender primarily for female artists ('Female')
+    and leaves blank for male/unknown artists. Blanks are treated as unpopulated fall-through.
+    """
     met_gender = str(row.get("artistGender") or "").strip().lower()
-    if met_gender == "female":
+    if "female" in met_gender:
         return "female"
-    if met_gender == "male":
+    if "male" in met_gender:
         return "male"
     return infer_gender(row.get("artistDisplayName"))
 

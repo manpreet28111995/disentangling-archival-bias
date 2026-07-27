@@ -1,0 +1,637 @@
+%% BioMed_Central_Bib_Style_v1.01
+
+\begin{thebibliography}{39}
+% BibTex style file: bmc-mathphys.bst (version 2.1), 2014-07-24
+\ifx \bisbn   \undefined \def \bisbn  #1{ISBN #1}\fi
+\ifx \binits  \undefined \def \binits#1{#1}\fi
+\ifx \bauthor  \undefined \def \bauthor#1{#1}\fi
+\ifx \batitle  \undefined \def \batitle#1{#1}\fi
+\ifx \bjtitle  \undefined \def \bjtitle#1{#1}\fi
+\ifx \bvolume  \undefined \def \bvolume#1{\textbf{#1}}\fi
+\ifx \byear  \undefined \def \byear#1{#1}\fi
+\ifx \bissue  \undefined \def \bissue#1{#1}\fi
+\ifx \bfpage  \undefined \def \bfpage#1{#1}\fi
+\ifx \blpage  \undefined \def \blpage #1{#1}\fi
+\ifx \burl  \undefined \def \burl#1{\textsf{#1}}\fi
+\ifx \doiurl  \undefined \def \doiurl#1{\url{https://doi.org/#1}}\fi
+\ifx \betal  \undefined \def \betal{\textit{et al.}}\fi
+\ifx \binstitute  \undefined \def \binstitute#1{#1}\fi
+\ifx \binstitutionaled  \undefined \def \binstitutionaled#1{#1}\fi
+\ifx \bctitle  \undefined \def \bctitle#1{#1}\fi
+\ifx \beditor  \undefined \def \beditor#1{#1}\fi
+\ifx \bpublisher  \undefined \def \bpublisher#1{#1}\fi
+\ifx \bbtitle  \undefined \def \bbtitle#1{#1}\fi
+\ifx \bedition  \undefined \def \bedition#1{#1}\fi
+\ifx \bseriesno  \undefined \def \bseriesno#1{#1}\fi
+\ifx \blocation  \undefined \def \blocation#1{#1}\fi
+\ifx \bsertitle  \undefined \def \bsertitle#1{#1}\fi
+\ifx \bsnm \undefined \def \bsnm#1{#1}\fi
+\ifx \bsuffix \undefined \def \bsuffix#1{#1}\fi
+\ifx \bparticle \undefined \def \bparticle#1{#1}\fi
+\ifx \barticle \undefined \def \barticle#1{#1}\fi
+\bibcommenthead
+\ifx \bconfdate \undefined \def \bconfdate #1{#1}\fi
+\ifx \botherref \undefined \def \botherref #1{#1}\fi
+\ifx \url \undefined \def \url#1{\textsf{#1}}\fi
+\ifx \bchapter \undefined \def \bchapter#1{#1}\fi
+\ifx \bbook \undefined \def \bbook#1{#1}\fi
+\ifx \bcomment \undefined \def \bcomment#1{#1}\fi
+\ifx \oauthor \undefined \def \oauthor#1{#1}\fi
+\ifx \citeauthoryear \undefined \def \citeauthoryear#1{#1}\fi
+\ifx \endbibitem  \undefined \def \endbibitem {}\fi
+\ifx \bconflocation  \undefined \def \bconflocation#1{#1}\fi
+\ifx \arxivurl  \undefined \def \arxivurl#1{\textsf{#1}}\fi
+\csname PreBibitemsHook\endcsname
+
+%%% 1
+\bibitem[\protect\citeauthoryear{Radford et~al.}{2021}]{radford2021learning}
+\begin{bchapter}
+\bauthor{\bsnm{Radford}, \binits{A.}},
+\bauthor{\bsnm{Kim}, \binits{J.W.}},
+\bauthor{\bsnm{Hallacy}, \binits{C.}},
+\bauthor{\bsnm{Ramesh}, \binits{A.}},
+\bauthor{\bsnm{Goh}, \binits{G.}},
+\bauthor{\bsnm{Agarwal}, \binits{S.}},
+\bauthor{\bsnm{Sastry}, \binits{G.}},
+\bauthor{\bsnm{Askell}, \binits{A.}},
+\bauthor{\bsnm{Mishkin}, \binits{P.}},
+\bauthor{\bsnm{Clark}, \binits{J.}},
+\bauthor{\bsnm{Krueger}, \binits{G.}},
+\bauthor{\bsnm{Sutskever}, \binits{I.}}:
+\bctitle{Learning transferable visual models from natural language
+  supervision}.
+In: \bbtitle{International Conference on Machine Learning (ICML)},
+pp. \bfpage{8748}--\blpage{8763}.
+\bpublisher{PMLR},
+\blocation{Virtual}
+(\byear{2021})
+\end{bchapter}
+\endbibitem
+
+%%% 2
+\bibitem[\protect\citeauthoryear{Fiorucci et~al.}{2020}]{fiorucci2020machine}
+\begin{barticle}
+\bauthor{\bsnm{Fiorucci}, \binits{M.}},
+\bauthor{\bsnm{Khoroshiltseva}, \binits{M.}},
+\bauthor{\bsnm{Pontil}, \binits{M.}},
+\bauthor{\bsnm{Traviglia}, \binits{A.}},
+\bauthor{\bsnm{Del~Bue}, \binits{A.}},
+\bauthor{\bsnm{James}, \binits{S.}}:
+\batitle{Machine learning for cultural heritage: A survey}.
+\bjtitle{Pattern Recognition Letters}
+\bvolume{133},
+\bfpage{102}--\blpage{108}
+(\byear{2020})
+\end{barticle}
+\endbibitem
+
+%%% 3
+\bibitem[\protect\citeauthoryear{Garcia et~al.}{2020}]{garcia2020bias}
+\begin{bchapter}
+\bauthor{\bsnm{Garcia}, \binits{N.}},
+\bauthor{\bsnm{Renoust}, \binits{B.}},
+\bauthor{\bsnm{Nakashima}, \binits{Y.}}:
+\bctitle{Context-aware embeddings for cultural heritage evaluation}.
+In: \bbtitle{Proceedings of the ACM International Conference on Multimedia
+  (MM)},
+pp. \bfpage{1210}--\blpage{1218}
+(\byear{2020})
+\end{bchapter}
+\endbibitem
+
+%%% 4
+\bibitem[\protect\citeauthoryear{Birhane et~al.}{2021}]{birhane2021multimodal}
+\begin{botherref}
+\oauthor{\bsnm{Birhane}, \binits{A.}},
+\oauthor{\bsnm{Prabhu}, \binits{V.U.}},
+\oauthor{\bsnm{Kahembwe}, \binits{E.}}:
+Multimodal datasets: Misogyny, pornography, and malignant stereotypes.
+arXiv preprint arXiv:2110.01963
+(2021)
+\end{botherref}
+\endbibitem
+
+%%% 5
+\bibitem[\protect\citeauthoryear{Wolfe and Caliskan}{2022}]{wolfe2022evidence}
+\begin{bchapter}
+\bauthor{\bsnm{Wolfe}, \binits{R.}},
+\bauthor{\bsnm{Caliskan}, \binits{A.}}:
+\bctitle{Evidence of gender bias in visual language models}.
+In: \bbtitle{ACM Conference on Fairness, Accountability, and Transparency
+  (FAccT)},
+pp. \bfpage{1192}--\blpage{1204}
+(\byear{2022})
+\end{bchapter}
+\endbibitem
+
+%%% 6
+\bibitem[\protect\citeauthoryear{Bender et~al.}{2021}]{bender2021stochastic}
+\begin{bchapter}
+\bauthor{\bsnm{Bender}, \binits{E.M.}},
+\bauthor{\bsnm{Gebru}, \binits{T.}},
+\bauthor{\bsnm{McMillan-Major}, \binits{M.}},
+\bauthor{\bsnm{Shmitchell}, \binits{S.}}:
+\bctitle{On the dangers of stochastic parrots: Can language models be too big?}
+In: \bbtitle{ACM Conference on Fairness, Accountability, and Transparency
+  (FAccT)},
+pp. \bfpage{610}--\blpage{623}
+(\byear{2021})
+\end{bchapter}
+\endbibitem
+
+%%% 7
+\bibitem[\protect\citeauthoryear{Topaz et~al.}{2019}]{topaz2019diversity}
+\begin{barticle}
+\bauthor{\bsnm{Topaz}, \binits{C.M.}},
+\bauthor{\bsnm{Klingenberg}, \binits{B.}},
+\bauthor{\bsnm{Tesch}, \binits{D.}},
+\bauthor{\bsnm{Koenig}, \binits{M.}}:
+\batitle{Diversity of artists in major u.s. museums}.
+\bjtitle{PLoS ONE}
+\bvolume{14}(\bissue{3}),
+\bfpage{0221360}
+(\byear{2019})
+\end{barticle}
+\endbibitem
+
+%%% 8
+\bibitem[\protect\citeauthoryear{Meier}{2021}]{meier2021gender}
+\begin{barticle}
+\bauthor{\bsnm{Meier}, \binits{P.}}:
+\batitle{Gender gaps in art history and digital collection representation}.
+\bjtitle{Journal of Cultural Analytics}
+\bvolume{6}(\bissue{1}),
+\bfpage{1}--\blpage{24}
+(\byear{2021})
+\end{barticle}
+\endbibitem
+
+%%% 9
+\bibitem[\protect\citeauthoryear{Carlson}{2022}]{carlson2022museum}
+\begin{barticle}
+\bauthor{\bsnm{Carlson}, \binits{A.}}:
+\batitle{Museum algorithms and digital archival biases}.
+\bjtitle{AI \& Society}
+\bvolume{37}(\bissue{2}),
+\bfpage{415}--\blpage{429}
+(\byear{2022})
+\end{barticle}
+\endbibitem
+
+%%% 10
+\bibitem[\protect\citeauthoryear{Bailey}{2020}]{bailey2020gender}
+\begin{barticle}
+\bauthor{\bsnm{Bailey}, \binits{C.}}:
+\batitle{Gender and the archival record: Representational gaps in heritage
+  repositories}.
+\bjtitle{Archivaria}
+\bvolume{89},
+\bfpage{42}--\blpage{78}
+(\byear{2020})
+\end{barticle}
+\endbibitem
+
+%%% 11
+\bibitem[\protect\citeauthoryear{Nochlin}{1971}]{nochlin1971why}
+\begin{bchapter}
+\bauthor{\bsnm{Nochlin}, \binits{L.}}:
+\bctitle{Why have there been no great women artists?}
+In: \beditor{\bsnm{Gornick}, \binits{V.}},
+\beditor{\bsnm{Moran}, \binits{B.K.}} (eds.)
+\bbtitle{Woman in Sexist Society: Studies in Power and Powerlessness},
+pp. \bfpage{1}--\blpage{38}.
+\bpublisher{Basic Books},
+\blocation{New York}
+(\byear{1971})
+\end{bchapter}
+\endbibitem
+
+%%% 12
+\bibitem[\protect\citeauthoryear{Pollock}{1988}]{pollock1988vision}
+\begin{bbook}
+\bauthor{\bsnm{Pollock}, \binits{G.}}:
+\bbtitle{Vision and Difference: Femininity, Feminism and the Histories of Art}.
+\bpublisher{Routledge},
+\blocation{London}
+(\byear{1988})
+\end{bbook}
+\endbibitem
+
+%%% 13
+\bibitem[\protect\citeauthoryear{Hall et~al.}{2023}]{hall2023auditing}
+\begin{bchapter}
+\bauthor{\bsnm{Hall}, \binits{M.}},
+\bauthor{\bsnm{Gustafson}, \binits{L.}},
+\bauthor{\bsnm{Adcock}, \binits{A.}},
+\bauthor{\bsnm{Mahajan}, \binits{D.}}:
+\bctitle{Auditing visual-language models for fairness and representation}.
+In: \bbtitle{IEEE/CVF Conference on Computer Vision and Pattern Recognition
+  (CVPR)},
+pp. \bfpage{14201}--\blpage{14210}
+(\byear{2023})
+\end{bchapter}
+\endbibitem
+
+%%% 14
+\bibitem[\protect\citeauthoryear{Buolamwini and
+  Gebru}{2018}]{buolamwini2018gender}
+\begin{bchapter}
+\bauthor{\bsnm{Buolamwini}, \binits{J.}},
+\bauthor{\bsnm{Gebru}, \binits{T.}}:
+\bctitle{Gender shades: Intersectional accuracy disparities in commercial
+  gender classification}.
+In: \bbtitle{Conference on Fairness, Accountability and Transparency (FAccT)},
+pp. \bfpage{77}--\blpage{91}.
+\bpublisher{PMLR},
+\blocation{New York, NY, USA}
+(\byear{2018})
+\end{bchapter}
+\endbibitem
+
+%%% 15
+\bibitem[\protect\citeauthoryear{Noorthuis et~al.}{2020}]{noorthuis2020bias}
+\begin{barticle}
+\bauthor{\bsnm{Noorthuis}, \binits{O.}},
+\bauthor{\bsnm{Benda}, \binits{M.}},
+\bauthor{\bsnm{Noordegraaf}, \binits{J.}}:
+\batitle{Biases in heritage datasets and their effect on ai applications}.
+\bjtitle{ACM Journal on Computing and Cultural Heritage (JOCCH)}
+\bvolume{13}(\bissue{4}),
+\bfpage{1}--\blpage{19}
+(\byear{2020})
+\end{barticle}
+\endbibitem
+
+%%% 16
+\bibitem[\protect\citeauthoryear{Dignum}{2019}]{dignum2019responsible}
+\begin{bbook}
+\bauthor{\bsnm{Dignum}, \binits{V.}}:
+\bbtitle{Responsible Artificial Intelligence: How to Develop and Use AI in a
+  Responsible Way}.
+\bpublisher{Springer},
+\blocation{Cham}
+(\byear{2019})
+\end{bbook}
+\endbibitem
+
+%%% 17
+\bibitem[\protect\citeauthoryear{Stahl et~al.}{2021}]{stahl2021responsible}
+\begin{barticle}
+\bauthor{\bsnm{Stahl}, \binits{B.C.}},
+\bauthor{\bsnm{Antoniou}, \binits{J.}},
+\bauthor{\bsnm{Bhalla}, \binits{N.}},
+\bauthor{\bsnm{Brooks}, \binits{L.}},
+\bauthor{\bsnm{Dean}, \binits{C.}},
+\bauthor{\bsnm{Epiphaniou}, \binits{G.}},
+\bauthor{\bsnm{Feldmann}, \binits{M.}},
+\bauthor{\bsnm{Frowd}, \binits{R.}},
+\bauthor{\bsnm{Garcia-Perez}, \binits{A.}}, \betal:
+\batitle{A systematic review of responsible ai frameworks: Mapping ethics and
+  governance in ai life cycle}.
+\bjtitle{AI and Ethics}
+\bvolume{1}(\bissue{4}),
+\bfpage{421}--\blpage{442}
+(\byear{2021})
+\end{barticle}
+\endbibitem
+
+%%% 18
+\bibitem[\protect\citeauthoryear{Jobin et~al.}{2019}]{jobin2019global}
+\begin{barticle}
+\bauthor{\bsnm{Jobin}, \binits{A.}},
+\bauthor{\bsnm{Ienca}, \binits{M.}},
+\bauthor{\bsnm{Vayena}, \binits{E.}}:
+\batitle{The global landscape of ai ethics guidelines}.
+\bjtitle{Nature Machine Intelligence}
+\bvolume{1}(\bissue{9}),
+\bfpage{389}--\blpage{399}
+(\byear{2019})
+\end{barticle}
+\endbibitem
+
+%%% 19
+\bibitem[\protect\citeauthoryear{Mitchell et~al.}{2019}]{mitchell2019model}
+\begin{bchapter}
+\bauthor{\bsnm{Mitchell}, \binits{M.}},
+\bauthor{\bsnm{Wu}, \binits{S.}},
+\bauthor{\bsnm{Zaldivar}, \binits{A.}},
+\bauthor{\bsnm{Barnes}, \binits{P.}},
+\bauthor{\bsnm{Vasserman}, \binits{L.}},
+\bauthor{\bsnm{Hutchinson}, \binits{B.}},
+\bauthor{\bsnm{Spitzer}, \binits{E.}},
+\bauthor{\bsnm{Raji}, \binits{I.D.}},
+\bauthor{\bsnm{Gebru}, \binits{T.}}:
+\bctitle{Model cards for model reporting}.
+In: \bbtitle{Proceedings of the Conference on Fairness, Accountability, and
+  Transparency (FAccT)},
+pp. \bfpage{220}--\blpage{229}
+(\byear{2019})
+\end{bchapter}
+\endbibitem
+
+%%% 20
+\bibitem[\protect\citeauthoryear{Srinivasan and
+  Chander}{2021}]{srinivasan2021arts}
+\begin{bchapter}
+\bauthor{\bsnm{Srinivasan}, \binits{R.}},
+\bauthor{\bsnm{Chander}, \binits{A.}}:
+\bctitle{Biases in generative art: A causal look from the lens of art history}.
+In: \bbtitle{Proceedings of the 2021 ACM Conference on Fairness,
+  Accountability, and Transparency},
+pp. \bfpage{41}--\blpage{51}.
+\bpublisher{ACM},
+\blocation{New York, NY, USA}
+(\byear{2021})
+\end{bchapter}
+\endbibitem
+
+%%% 21
+\bibitem[\protect\citeauthoryear{Luccioni et~al.}{2023}]{luccioni2023stable}
+\begin{bchapter}
+\bauthor{\bsnm{Luccioni}, \binits{A.S.}},
+\bauthor{\bsnm{Akiki}, \binits{C.}},
+\bauthor{\bsnm{Mitchell}, \binits{M.}},
+\bauthor{\bsnm{Jernite}, \binits{Y.}}:
+\bctitle{Stable bias: Analyzing sociotechnical biases in text-to-image
+  generative models}.
+In: \bbtitle{Advances in Neural Information Processing Systems (NeurIPS)},
+vol. \bseriesno{36},
+pp. \bfpage{12341}--\blpage{12356}.
+\bpublisher{Curran Associates, Inc.},
+\blocation{Red Hook, NY, USA}
+(\byear{2023})
+\end{bchapter}
+\endbibitem
+
+%%% 22
+\bibitem[\protect\citeauthoryear{Zhao et~al.}{2017}]{zhao2017men}
+\begin{bchapter}
+\bauthor{\bsnm{Zhao}, \binits{J.}},
+\bauthor{\bsnm{Wang}, \binits{T.}},
+\bauthor{\bsnm{Yatskar}, \binits{M.}},
+\bauthor{\bsnm{Ordonez}, \binits{V.}},
+\bauthor{\bsnm{Chang}, \binits{K.-W.}}:
+\bctitle{Men also like shopping: Reducing gender bias amplification using
+  corpus-level constraints}.
+In: \bbtitle{Proceedings of the Conference on Empirical Methods in Natural
+  Language Processing (EMNLP)},
+pp. \bfpage{2979}--\blpage{2989}
+(\byear{2017})
+\end{bchapter}
+\endbibitem
+
+%%% 23
+\bibitem[\protect\citeauthoryear{Bianchi et~al.}{2023}]{bianchi2023easily}
+\begin{bchapter}
+\bauthor{\bsnm{Bianchi}, \binits{F.}},
+\bauthor{\bsnm{Kalluri}, \binits{P.}},
+\bauthor{\bsnm{Durmus}, \binits{E.}},
+\bauthor{\bsnm{Lialin}, \binits{V.}},
+\bauthor{\bsnm{Jurafsky}, \binits{D.}},
+\bauthor{\bsnm{Hashimoto}, \binits{T.}},
+\bauthor{\bsnm{Zou}, \binits{J.}}:
+\bctitle{Easily accessible text-to-image generation amplifies demographic
+  stereotypes}.
+In: \bbtitle{ACM Conference on Fairness, Accountability, and Transparency
+  (FAccT)},
+pp. \bfpage{1491}--\blpage{1502}
+(\byear{2023})
+\end{bchapter}
+\endbibitem
+
+%%% 24
+\bibitem[\protect\citeauthoryear{{The Metropolitan Museum of
+  Art}}{2023}]{met_api_2023}
+\begin{botherref}
+\oauthor{\bsnm{{The Metropolitan Museum of Art}}}:
+The Metropolitan Museum of Art Collection API.
+\url{https://metmuseum.github.io/}.
+Accessed: 2026-07-24
+(2023)
+\end{botherref}
+\endbibitem
+
+%%% 25
+\bibitem[\protect\citeauthoryear{Cherti et~al.}{2023}]{cherti2023reproducible}
+\begin{bchapter}
+\bauthor{\bsnm{Cherti}, \binits{M.}},
+\bauthor{\bsnm{Beaumont}, \binits{R.}},
+\bauthor{\bsnm{Wightman}, \binits{R.}},
+\bauthor{\bsnm{Wortsman}, \binits{M.}},
+\bauthor{\bsnm{Ilharco}, \binits{G.}},
+\bauthor{\bsnm{Gordon}, \binits{C.}},
+\bauthor{\bsnm{Schuhmann}, \binits{C.}},
+\bauthor{\bsnm{Schmidt}, \binits{L.}},
+\bauthor{\bsnm{Jitsev}, \binits{J.}}:
+\bctitle{Reproducible scaling laws for contrastive language-image learning}.
+In: \bbtitle{IEEE/CVF Conference on Computer Vision and Pattern Recognition
+  (CVPR)},
+pp. \bfpage{2818}--\blpage{2827}
+(\byear{2023})
+\end{bchapter}
+\endbibitem
+
+%%% 26
+\bibitem[\protect\citeauthoryear{Schuhmann et~al.}{2022}]{schuhmann2022laion}
+\begin{bchapter}
+\bauthor{\bsnm{Schuhmann}, \binits{C.}},
+\bauthor{\bsnm{Beaumont}, \binits{R.}},
+\bauthor{\bsnm{Vencu}, \binits{R.}},
+\bauthor{\bsnm{Gordon}, \binits{C.}},
+\bauthor{\bsnm{Utt}, \binits{R.}},
+\bauthor{\bsnm{Cherti}, \binits{M.}},
+\bauthor{\bsnm{Coombes}, \binits{T.}},
+\bauthor{\bsnm{Katta}, \binits{A.}},
+\bauthor{\bsnm{Mullis}, \binits{C.}},
+\bauthor{\bsnm{Wortsman}, \binits{M.}}, \betal:
+\bctitle{Laion-5b: An open large-scale dataset for training next generation
+  image-text models}.
+In: \bbtitle{Advances in Neural Information Processing Systems (NeurIPS)},
+vol. \bseriesno{35},
+pp. \bfpage{25278}--\blpage{25294}
+(\byear{2022})
+\end{bchapter}
+\endbibitem
+
+%%% 27
+\bibitem[\protect\citeauthoryear{Bowker and Star}{2000}]{bowker2000sorting}
+\begin{bbook}
+\bauthor{\bsnm{Bowker}, \binits{G.C.}},
+\bauthor{\bsnm{Star}, \binits{S.L.}}:
+\bbtitle{Sorting Things Out: Classification and Its Consequences}.
+\bpublisher{MIT Press},
+\blocation{Cambridge, MA}
+(\byear{2000})
+\end{bbook}
+\endbibitem
+
+%%% 28
+\bibitem[\protect\citeauthoryear{He et~al.}{2016}]{he2016deep}
+\begin{bchapter}
+\bauthor{\bsnm{He}, \binits{K.}},
+\bauthor{\bsnm{Zhang}, \binits{X.}},
+\bauthor{\bsnm{Ren}, \binits{S.}},
+\bauthor{\bsnm{Sun}, \binits{J.}}:
+\bctitle{Deep residual learning for image recognition}.
+In: \bbtitle{IEEE Conference on Computer Vision and Pattern Recognition
+  (CVPR)},
+pp. \bfpage{770}--\blpage{778}
+(\byear{2016})
+\end{bchapter}
+\endbibitem
+
+%%% 29
+\bibitem[\protect\citeauthoryear{Dosovitskiy
+  et~al.}{2021}]{dosovitskiy2020image}
+\begin{bchapter}
+\bauthor{\bsnm{Dosovitskiy}, \binits{A.}},
+\bauthor{\bsnm{Beyer}, \binits{L.}},
+\bauthor{\bsnm{Kolesnikov}, \binits{A.}},
+\bauthor{\bsnm{Weissenborn}, \binits{D.}},
+\bauthor{\bsnm{Zhai}, \binits{X.}},
+\bauthor{\bsnm{Unterthiner}, \binits{T.}},
+\bauthor{\bsnm{Dehghani}, \binits{M.}},
+\bauthor{\bsnm{Minderer}, \binits{M.}},
+\bauthor{\bsnm{Heigold}, \binits{G.}},
+\bauthor{\bsnm{Gelly}, \binits{S.}}, \betal:
+\bctitle{An image is worth 16x16 words: Transformers for image recognition at
+  scale}.
+In: \bbtitle{International Conference on Learning Representations (ICLR)}
+(\byear{2021})
+\end{bchapter}
+\endbibitem
+
+%%% 30
+\bibitem[\protect\citeauthoryear{Steed and Caliskan}{2021}]{steed2021image}
+\begin{bchapter}
+\bauthor{\bsnm{Steed}, \binits{R.}},
+\bauthor{\bsnm{Caliskan}, \binits{A.}}:
+\bctitle{Image representations learned with unsupervised pre-training contain
+  human-like biases}.
+In: \bbtitle{ACM Conference on Fairness, Accountability, and Transparency
+  (FAccT)},
+pp. \bfpage{709}--\blpage{713}
+(\byear{2021})
+\end{bchapter}
+\endbibitem
+
+%%% 31
+\bibitem[\protect\citeauthoryear{Wang et~al.}{2022}]{wang2022revisiting}
+\begin{bchapter}
+\bauthor{\bsnm{Wang}, \binits{J.}},
+\bauthor{\bsnm{Liu}, \binits{Y.}},
+\bauthor{\bsnm{Wang}, \binits{X.E.}}:
+\bctitle{Are vision-language models fair? a systematic study of gender and
+  racial bias in clip}.
+In: \bbtitle{European Conference on Computer Vision (ECCV)},
+pp. \bfpage{340}--\blpage{357}.
+\bpublisher{Springer},
+\blocation{Cham}
+(\byear{2022})
+\end{bchapter}
+\endbibitem
+
+%%% 32
+\bibitem[\protect\citeauthoryear{Bolukbasi et~al.}{2016}]{bolukbasi2016man}
+\begin{bchapter}
+\bauthor{\bsnm{Bolukbasi}, \binits{T.}},
+\bauthor{\bsnm{Chang}, \binits{K.-W.}},
+\bauthor{\bsnm{Zou}, \binits{J.Y.}},
+\bauthor{\bsnm{Saligrama}, \binits{V.}},
+\bauthor{\bsnm{Kalai}, \binits{A.T.}}:
+\bctitle{Man is to computer programmer as woman is to homemaker? debiasing word
+  embeddings}.
+In: \bbtitle{Advances in Neural Information Processing Systems (NeurIPS)},
+vol. \bseriesno{29},
+pp. \bfpage{4349}--\blpage{4357}
+(\byear{2016})
+\end{bchapter}
+\endbibitem
+
+%%% 33
+\bibitem[\protect\citeauthoryear{Israel}{2020}]{gender_guesser}
+\begin{botherref}
+\oauthor{\bsnm{Israel}, \binits{J.}}:
+gender-guesser: Language-independent name-based gender detection.
+\url{https://pypi.org/project/gender-guesser/}
+(2020)
+\end{botherref}
+\endbibitem
+
+%%% 34
+\bibitem[\protect\citeauthoryear{Keyes}{2018}]{keyes2018misgendering}
+\begin{barticle}
+\bauthor{\bsnm{Keyes}, \binits{O.}}:
+\batitle{The misgendering machines: Trans needs and the limits of automatic
+  gender recognition}.
+\bjtitle{Proceedings of the ACM on Human-Computer Interaction}
+\bvolume{2}(\bissue{CSCW}),
+\bfpage{88}--\blpage{18822}
+(\byear{2018})
+\end{barticle}
+\endbibitem
+
+%%% 35
+\bibitem[\protect\citeauthoryear{Shapiro and Wilk}{1965}]{shapiro1965analysis}
+\begin{barticle}
+\bauthor{\bsnm{Shapiro}, \binits{S.S.}},
+\bauthor{\bsnm{Wilk}, \binits{M.B.}}:
+\batitle{An analysis of variance test for normality (complete samples)}.
+\bjtitle{Biometrika}
+\bvolume{52}(\bissue{3/4}),
+\bfpage{591}--\blpage{611}
+(\byear{1965})
+\end{barticle}
+\endbibitem
+
+%%% 36
+\bibitem[\protect\citeauthoryear{Mann and Whitney}{1947}]{mann1947test}
+\begin{botherref}
+\oauthor{\bsnm{Mann}, \binits{H.B.}},
+\oauthor{\bsnm{Whitney}, \binits{D.R.}}:
+On a test of whether one of two random variables is stochastically larger than
+  the other.
+The Annals of Mathematical Statistics,
+50--60
+(1947)
+\end{botherref}
+\endbibitem
+
+%%% 37
+\bibitem[\protect\citeauthoryear{Lakens}{2017}]{lakens2017equivalence}
+\begin{barticle}
+\bauthor{\bsnm{Lakens}, \binits{D.}}:
+\batitle{Equivalence tests: A practical primer for t tests, correlations, and
+  meta-analyses}.
+\bjtitle{Social Psychological and Personality Science}
+\bvolume{8}(\bissue{4}),
+\bfpage{355}--\blpage{362}
+(\byear{2017})
+\end{barticle}
+\endbibitem
+
+%%% 38
+\bibitem[\protect\citeauthoryear{Cohen}{1988}]{cohen1988statistical}
+\begin{bbook}
+\bauthor{\bsnm{Cohen}, \binits{J.}}:
+\bbtitle{Statistical Power Analysis for the Behavioral Sciences},
+\bedition{2nd} edn.
+\bpublisher{Lawrence Erlbaum Associates},
+\blocation{Hillsdale, NJ}
+(\byear{1988})
+\end{bbook}
+\endbibitem
+
+%%% 39
+\bibitem[\protect\citeauthoryear{Simpson}{1951}]{simpson1951interpretation}
+\begin{barticle}
+\bauthor{\bsnm{Simpson}, \binits{E.H.}}:
+\batitle{The interpretation of interaction in contingency tables}.
+\bjtitle{Journal of the Royal Statistical Society: Series B (Methodological)}
+\bvolume{13}(\bissue{2}),
+\bfpage{238}--\blpage{241}
+(\byear{1951})
+\end{barticle}
+\endbibitem
+
+\end{thebibliography}

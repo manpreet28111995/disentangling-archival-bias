@@ -40,7 +40,7 @@ PROMPT_SETS = {
     }
 }
 
-NEUTRAL_PROMPTS = ["a painting", "a photograph of an artwork"]
+NEUTRAL_PROMPTS = ["a painting", "an artwork", "a photograph of art", "a museum object"]
 MODEL_NAME = "laion/CLIP-ViT-B-32-laion2B-s34B-b79K"
 
 
@@ -52,23 +52,45 @@ def load_model():
     return model, processor
 
 
-def download_image(url, timeout=15):
+def resolve_met_image_url(object_id, cache_dir=".met_cache", timeout=10):
+    """Query the Met Open Access API for the real image URL of an object."""
+    import json
+    os.makedirs(cache_dir, exist_ok=True)
+    cache_path = os.path.join(cache_dir, f"{object_id}.json")
+    if os.path.exists(cache_path):
+        try:
+            with open(cache_path, "r") as f:
+                data = json.load(f)
+                return data.get("primaryImageSmall") or data.get("primaryImage")
+        except Exception:
+            pass
     try:
-        headers = {"User-Agent": "Mozilla/5.0"}
-        resp = requests.get(url, headers=headers, timeout=timeout)
+        resp = requests.get(
+            f"https://collectionapi.metmuseum.org/public/collection/v1/objects/{object_id}",
+            timeout=timeout,
+        )
+        if resp.status_code == 200:
+            data = resp.json()
+            with open(cache_path, "w") as f:
+                json.dump(data, f)
+            return data.get("primaryImageSmall") or data.get("primaryImage")
+    except Exception as e:
+        print(f"  [WARN] Met API lookup failed for {object_id}: {e}")
+    return None
+
+
+def download_image(url, timeout=10, object_id=None):
+    """Download image from URL via HTTP. Returns PIL Image or None on failure."""
+    if not url:
+        return None
+    try:
+        resp = requests.get(url, timeout=timeout)
         resp.raise_for_status()
         img = Image.open(io.BytesIO(resp.content)).convert("RGB")
         return img
-    except Exception:
+    except Exception as e:
+        print(f"  [WARN] Failed to download image for object {object_id}: {e}")
         return None
-
-
-def score_image(model, processor, image, prompts):
-    inputs = processor(text=prompts, images=image, return_tensors="pt", padding=True)
-    with torch.no_grad():
-        outputs = model(**inputs)
-    probs = outputs.logits_per_image.softmax(dim=1).squeeze(0).tolist()
-    return probs
 
 
 def bootstrap_ci(group1, group2, n_boot=1000, ci=95, seed=42):
@@ -83,6 +105,18 @@ def bootstrap_ci(group1, group2, n_boot=1000, ci=95, seed=42):
     lower = np.percentile(diffs, (100 - ci) / 2)
     upper = np.percentile(diffs, 100 - (100 - ci) / 2)
     return np.mean(diffs), lower, upper
+
+
+def batch_score_images(model, processor, images, prompts, batch_size=32):
+    all_probs = []
+    for i in range(0, len(images), batch_size):
+        batch = images[i:i+batch_size]
+        inputs = processor(text=prompts, images=batch, return_tensors="pt", padding=True)
+        with torch.no_grad():
+            outputs = model(**inputs)
+        probs = outputs.logits_per_image.softmax(dim=1).cpu().numpy()
+        all_probs.extend(probs)
+    return all_probs
 
 
 def main():
@@ -103,16 +137,22 @@ def main():
     all_prompts.extend(NEUTRAL_PROMPTS)
     all_prompts = list(dict.fromkeys(all_prompts))
 
-    records = []
-    for _, row in tqdm(df.iterrows(), total=len(df), desc="Scoring images with OpenCLIP"):
-        img_url = row.get("primaryImageSmall") or row.get("primaryImage")
-        if not img_url or not isinstance(img_url, str):
-            continue
-        img = download_image(img_url)
-        if img is None:
-            continue
+    images = []
+    valid_rows = []
+    for _, row in tqdm(df.iterrows(), total=len(df), desc="Loading images for OpenCLIP"):
+        oid = row.get("objectID")
+        real_url = resolve_met_image_url(oid)
+        img = download_image(real_url, object_id=oid)
+        if img is not None:
+            images.append(img)
+            valid_rows.append(row)
+    print(f"Successfully loaded {len(images)} / {len(df)} images")
 
-        probs = score_image(model, processor, img, all_prompts)
+    print(f"Executing batch OpenCLIP inference for {len(images)} images...")
+    probs_list = batch_score_images(model, processor, images, all_prompts, batch_size=32)
+
+    records = []
+    for row, img, probs in zip(valid_rows, images, probs_list):
         prob_dict = dict(zip(all_prompts, probs))
 
         rec = {
@@ -129,18 +169,17 @@ def main():
 
         set_scores = []
         for set_name, pset in PROMPT_SETS.items():
-            diff = prob_dict[pset["high"]] - prob_dict[pset["low"]]
+            diff = float(prob_dict[pset["high"]] - prob_dict[pset["low"]])
             rec[f"score_{set_name}"] = diff
             set_scores.append(diff)
 
-        rec["mean_value_score"] = np.mean(set_scores)
+        rec["mean_value_score"] = float(np.mean(set_scores))
         records.append(rec)
 
     results = pd.DataFrame(records)
     results.to_csv(os.path.join(args.out_dir, "openclip_scores.csv"), index=False)
     print(f"Saved {len(results)} scored images to openclip_scores.csv")
 
-    # --- Statistical Analysis ---
     male_res = results[results["inferred_gender"] == "male"]
     female_res = results[results["inferred_gender"] == "female"]
 
@@ -150,7 +189,6 @@ def main():
         m_scores = male_res["mean_value_score"]
         f_scores = female_res["mean_value_score"]
 
-        # 1. Mann-Whitney U test + Effect Size
         stat, p_val = mannwhitneyu(m_scores, f_scores, alternative="two-sided")
         n1, n2 = len(m_scores), len(f_scores)
         rank_biserial = 1 - (2 * stat) / (n1 * n2)
@@ -162,14 +200,12 @@ def main():
         report_lines.append(f"   Rank-Biserial Correlation r = {rank_biserial:.4f}")
         report_lines.append("")
 
-        # 2. Bootstrap Confidence Intervals
         mean_diff, ci_low, ci_high = bootstrap_ci(m_scores, f_scores)
         report_lines.append("2. BOOTSTRAP 95% CONFIDENCE INTERVAL (MALE MEAN - FEMALE MEAN)")
         report_lines.append(f"   Mean Difference = {mean_diff:.4f}")
         report_lines.append(f"   95% CI = [{ci_low:.4f}, {ci_high:.4f}]")
         report_lines.append("")
 
-        # 3. Robustness per prompt set
         report_lines.append("3. PROMPT SET ROBUSTNESS CHECK")
         for set_name in PROMPT_SETS.keys():
             col = f"score_{set_name}"
@@ -180,14 +216,20 @@ def main():
             report_lines.append(f"   [{set_name}] Male mean={m_s.mean():.4f} | Female mean={f_s.mean():.4f} | p={p_s:.4f} | r={r_s:.4f}")
         report_lines.append("")
 
-        # 4. OLS Confound Control Regression
         report_lines.append("4. MULTIVARIATE OLS REGRESSION (CONFOUND CONTROL)")
         try:
             model_ols = smf.ols(
-                "mean_value_score ~ C(inferred_gender) + C(medium_category) + aspect_ratio",
+                "mean_value_score ~ C(inferred_gender) + C(medium_category) + C(century) + aspect_ratio",
+                data=results
+            ).fit(cov_type="HC3")
+            report_lines.append(str(model_ols.summary()))
+            
+            model_rlm = smf.rlm(
+                "mean_value_score ~ C(inferred_gender) + C(medium_category) + C(century) + aspect_ratio",
                 data=results
             ).fit()
-            report_lines.append(str(model_ols.summary()))
+            report_lines.append("\nHUBER ROBUST LINEAR MODEL (RLM) CROSS-VALIDATION:")
+            report_lines.append(str(model_rlm.summary()))
         except Exception as e:
             report_lines.append(f"   OLS regression error: {e}")
 
@@ -197,7 +239,6 @@ def main():
         f.write(report_text)
     print("\n" + report_text)
 
-    # Plot Comparison
     fig, ax = plt.subplots(figsize=(6, 4.5))
     results.boxplot(column="mean_value_score", by="inferred_gender", ax=ax, grid=False)
     ax.set_title("OpenCLIP (LAION-2B) Value Score by Artist Gender")

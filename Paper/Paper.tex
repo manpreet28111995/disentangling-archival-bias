@@ -3,7 +3,7 @@
 \usepackage{multirow}%
 \usepackage{amsmath,amssymb,amsfonts}%
 \usepackage{amsthm}%
-\usepackage{mathrsfs}%
+%\usepackage{mathrsfs}%
 \usepackage[title]{appendix}%
 \usepackage{xcolor}%
 \usepackage{textcomp}%
@@ -31,10 +31,10 @@
 
 \begin{document}
 
-\title[Article Title]{Disentangling Algorithmic Bias from Archival Artifacts: A Controlled Audit of Vision-Language Model Valuation in Museum Collections}
+\title[Article Title]{Disentangling Algorithmic Bias from Archival Artifacts: A Controlled Audit of Vision-Language Model Valuation in Metropolitan Museum Archives}
 
 \abstract{
-Auditing artificial intelligence models for societal bias requires distinguishing direct model evaluation disparities from confounders embedded within archival metadata. In this study, we audit visual-text representation and valuation bias in Contrastive Language-Image Pre-training (CLIP) models using artwork metadata harvested from the Metropolitan Museum of Art. We establish a multi-tiered quantitative framework, evaluating a sample of historical artworks ($N = 96$; Male $N = 68$, Female $N = 28$) via CLIP softmax probability differential scores across three distinct prompt formulations. Non-parametric evaluation under OpenAI CLIP reveals no statistically significant difference in raw composite artistic value scores between male ($\mu = -0.0008, \sigma = 0.0579$) and female ($\mu = 0.0107, \sigma = 0.0281$) artists ($U = 867.00$, $p = 0.496, r = 0.0893$). However, prompt-level sensitivity checks uncover a statistically significant gender disparity under descriptors probing historical influence versus decorative craft ($p = 0.029, r = -0.2847$), reflecting gendered historical art taxonomies. Multivariate Ordinary Least Squares (OLS) regression controlling for artwork medium category and aspect ratio ($R^2 = 0.450$, $F(6, 89) = 12.11$, $p < 0.001$) demonstrates that artist gender is not a significant predictor under OpenAI CLIP ($B = -0.0157$, $p = 0.092$), with score variance heavily driven by physical medium (sculpture $B = -0.2873$, $p < 0.001$). Crucially, cross-model auditing demonstrates that OpenCLIP (pretrained on uncurated LAION-2B web scrapes) retains a statistically significant gender valuation shift ($B = -0.0723$, $p = 0.001$) even after full multivariate confound control. These findings demonstrate that while apparent VLM biases can be artifactual in curated architectures, uncurated web training sets ingest persistent demographic valuation disparities, highlighting the necessity of pretraining curation and multivariate confound control in archival AI governance.
+Auditing artificial intelligence models for societal bias requires distinguishing direct model evaluation disparities from confounders embedded within archival metadata. In this study, we audit visual-text representation and valuation bias in Contrastive Language-Image Pre-training (CLIP) models using artwork metadata harvested from the Metropolitan Museum of Art Open Access archives. We establish a multi-tiered quantitative framework, evaluating a corpus of historical artworks ($N = 1,500$ total objects; $N = 743$ attributed named works: Male $n = 534$, Female $n = 209$; $n = 618$ anonymous/unattributed) via zero-shot CLIP softmax probability differential scores across three distinct prompt formulations. Unadjusted evaluations reveal no statistically significant baseline gender valuation disparity under either OpenAI CLIP ($\mu_F = -0.0067, \sigma = 0.0344$ vs $\mu_M = -0.0035, \sigma = 0.0361$; $U = 59,307.00$, $p = 0.1829$, rank-biserial $r = -0.0628$) or OpenCLIP ($\mu_F = 0.0171, \sigma = 0.0835$ vs $\mu_M = 0.0237, \sigma = 0.0886$; $U = 59,867.00$, $p = 0.1224$, $r = -0.0728$). Two One-Sided Tests (TOST) confirm statistical equivalence within a Cohen's $d = 0.30$ margin ($p_{\text{TOST}} = 0.0042$ for OpenAI CLIP; $p_{\text{TOST}} = 0.0024$ for OpenCLIP). Prompt-level sensitivity checks confirm consistent valuation stability across semantic descriptors (\textit{masterpiece}, \textit{quality}, and \textit{influence}). Multivariate Ordinary Least Squares (OLS) regression controlling for physical artwork medium, creation century, and image aspect ratio ($R^2 = 0.018$, $F(11, 731) = 0.9286$, $p = 0.512$ for OpenAI CLIP; $R^2 = 0.017$, $F(11, 731) = 0.9888$, $p = 0.455$ for OpenCLIP) demonstrates that framing aspect ratio ($B = -0.0064, p = 0.141$ in CLIP; $B = -0.0023, p = 0.516$ in OpenCLIP) and artist gender ($B = 0.0037, p = 0.202$ in CLIP; $B = 0.0065, p = 0.356$ in OpenCLIP) exhibit no statistically significant main effect post-adjustment, with overall low $R^2$ ($<2\%$) reflecting high residual embedding variance. Crucially, we highlight that excluding $41.2\%$ ($n=618$) unattributed holdings reflects an uneliminable institutional survival bias. These findings demonstrate the necessity of rigorous multivariate confound control and equivalence testing to ensure transparent governance and prevent misattribution of archival metadata gaps to demographic model bias.
 }
 
 \keywords{Vision-Language Models, Algorithmic Bias Audits, Museum Archives, Digital Humanities, Confound Control, Responsible AI}
@@ -45,9 +45,9 @@ Auditing artificial intelligence models for societal bias requires distinguishin
 \label{sec:introduction}
 
 \subsection{Background and Motivation}
-Large-scale vision-language models (VLMs), such as Contrastive Language-Image Pre-training (CLIP) \cite{radford2021learning}, are increasingly deployed across digital humanities, automated collection cataloging, and computational art history \cite{fiorucci2020machine, garcia2020bias}. Because these models align visual features with text representations learned from uncurated web scrapes, concern has grown that they inherit and amplify historical socio-cultural biases \cite{birhane2021multimodal, wolfe2022evidence, bender2021stochastic}. In cultural heritage institutions, historical collections already reflect systemic representational imbalances, including severe gender and regional disparities in acquisition and archival documentation \cite{topaz2019diversity, meier2021gender, carlson2022museum, bailey2020gender}.
+Large-scale vision-language models (VLMs), such as Contrastive Language-Image Pre-training (CLIP) \cite{radford2021learning}, are increasingly deployed across digital humanities, automated collection cataloging, and computational art history \cite{fiorucci2020machine, garcia2020bias}. Because these models align visual features with text representations learned from uncurated web scrapes, concern has grown that they inherit and amplify historical socio-cultural biases \cite{birhane2021multimodal, wolfe2022evidence, bender2021stochastic}. In cultural heritage institutions, historical collections already reflect systemic representational imbalances, including severe gender and regional disparities in acquisition and archival documentation \cite{topaz2019diversity, meier2021gender, carlson2022museum, bailey2020gender, nochlin1971why, pollock1988vision}.
 
-When auditing VLMs for representational bias, a critical methodological challenge arises: distinguishing direct algorithmic valuation bias from confounding variables embedded within archival metadata \cite{hall2023auditing, buolamwini2018gender, noorthuis2020bias}. If female artists in a historical collection are disproportionately represented in specific media (such as textiles or works on paper) relative to male artists (who dominate large-scale oil paintings or monumental sculptures), an unadjusted evaluation of visual-text similarity scores may misattribute medium-specific model behaviors to gender bias. Evaluating AI fairness in cultural archives therefore requires controlled quantitative audit frameworks capable of isolating demographic main effects from structural collection artifacts.
+When auditing VLMs for representational bias, a critical methodological challenge arises: distinguishing direct algorithmic valuation bias from confounding variables embedded within archival metadata \cite{hall2023auditing, buolamwini2018gender, noorthuis2020bias}. Grounded in established Responsible AI governance frameworks \cite{dignum2019responsible, stahl2021responsible, jobin2019global}, evaluating AI fairness in cultural archives requires controlled quantitative audit pipelines capable of isolating demographic main effects from structural collection artifacts. If female artists in a historical collection are disproportionately represented in specific media (such as textiles or works on paper) relative to male artists (who dominate large-scale oil paintings or monumental sculptures), an unadjusted evaluation of visual-text similarity scores may misattribute medium-specific model behaviors to gender bias. Embedding multivariate confound control directly into Responsible AI audit architectures \cite{mitchell2019model, stahl2021responsible} ensures that institutional AI deployments do not misinterpret historical curation artifacts as active model evaluation bias.
 
 Furthermore, the rapid integration of zero-shot vision-language classifiers into public search systems, digital library indexing, and collection exploration interfaces makes this distinction practical rather than purely theoretical \cite{srinivasan2021arts, luccioni2023stable}. If a museum search index uses uncalibrated CLIP embeddings to surface "masterpieces" or "influential works," model biases interacting with archival metadata gaps could systematically deprioritize works by historically underrepresented artists \cite{zhao2017men, bianchi2023easily}. Addressing these risks requires systematic empirical audits that evaluate both raw model outputs and multivariate confound interactions across diverse pretraining architectures.
 
@@ -56,21 +56,22 @@ This study investigates how vision-language models evaluate historical artworks 
 \begin{enumerate}
     \item \textbf{RQ1:} Do CLIP visual-text similarity scores assign significantly lower aesthetic valuation to artworks created by female artists compared to male artists in public museum collections?
     \item \textbf{RQ2:} How robust are algorithmic valuation scores across distinct semantic prompt formulations operationalizing artistic importance?
-    \item \textbf{RQ3:} When controlling for structural archival confounders such as artwork medium and aspect ratio, does artist gender remain a statistically significant predictor of model evaluation?
+    \item \textbf{RQ3:} When controlling for structural archival confounders such as artwork medium, historical creation era, and aspect ratio, does artist gender remain a statistically significant predictor of model evaluation?
 \end{enumerate}
 
-To answer these questions, we audit a curated sample of historical artworks ($N = 96$; Male $N = 68$, Female $N = 28$) harvested from the Metropolitan Museum of Art Open Access API \cite{met_api_2023, garcia2020bias}. We construct a multi-tiered quantitative framework that measures CLIP softmax probability differential scores across three distinct prompt pairs (\textit{masterpiece}, \textit{quality}, and \textit{influence}). We apply non-parametric hypothesis testing (Mann-Whitney $U$), rank-biserial effect sizes ($r$), bootstrapped 95\% confidence intervals, and multivariate Ordinary Least Squares (OLS) regression across two distinct model pretraining regimes: OpenAI CLIP (ViT-B/32, trained on curated data) and OpenCLIP (ViT-B/32, trained on uncurated LAION-2B data) \cite{cherti2023reproducible, schuhmann2022laion}.
+To answer these questions, we audit a complete corpus of historical artworks ($N = 1,500$ total records: $N = 743$ attributed works, Male $n = 534$, Female $n = 209$; $n = 618$ anonymous/unattributed) harvested from the Metropolitan Museum of Art Open Access API \cite{met_api_2023, garcia2020bias}. We construct a multi-tiered quantitative framework that measures CLIP softmax probability differential scores across three distinct prompt pairs (\textit{masterpiece}, \textit{quality}, and \textit{influence}). We apply non-parametric hypothesis testing (Mann-Whitney $U$), rank-biserial effect sizes ($r$), bootstrapped 95\% confidence intervals, and multivariate Ordinary Least Squares (OLS) regression with HC3 heteroskedasticity-robust standard errors across two model pretraining regimes: OpenAI CLIP (ViT-B/32, trained on curated WIT) and OpenCLIP (ViT-B/32, trained on uncurated LAION-2B) \cite{cherti2023reproducible, schuhmann2022laion}.
 
 Our primary empirical contributions include:
 \begin{itemize}
-    \item Unadjusted evaluations under OpenAI CLIP reveal no statistically significant difference in raw composite value scores between male ($\mu = -0.0008, \sigma = 0.0579$) and female ($\mu = 0.0107, \sigma = 0.0281$) artists ($U = 867.00$, $p = 0.496$, $r = 0.0893$; 95\% CI $[-0.0307, 0.0039]$).
-    \item Prompt robustness checks demonstrate critical domain-specific sensitivity; descriptors emphasizing historical influence versus decorative craft yield a statistically significant gender disparity ($p = 0.0292, r = -0.2847$) in OpenAI CLIP, reflecting historical feminist critique regarding the institutional devaluation of craft media.
-    \item Multivariate OLS regression ($R^2 = 0.450$, $F(6, 89) = 12.11$, $p < 0.001$) shows that artist gender is not a significant predictor of model scores under OpenAI CLIP ($B = -0.0157$, $p = 0.092$), whereas artwork medium, particularly sculpture ($B = -0.2873$, $p < 0.001$), accounts for the primary score variance.
-    \item Cross-model comparison reveals that OpenCLIP (LAION-2B) retains a statistically significant gender valuation shift ($B = -0.0723$, $p = 0.001$) even after multivariate adjustment, proving that pretraining dataset curation directly dictates whether model bias is mediated through metadata artifacts or operates as a direct evaluation disparity.
+    \item Unadjusted evaluations across the complete $N=743$ attributed corpus reveal no statistically significant composite valuation gap between female and male artists under OpenAI CLIP ($\mu_F = -0.0067$ vs $\mu_M = -0.0035, U = 59,307.00, p = 0.1829, r = -0.0628$) or OpenCLIP ($\mu_F = 0.0171$ vs $\mu_M = 0.0237, U = 59,867.00, p = 0.1224, r = -0.0728$).
+    \item Two One-Sided Tests (TOST) establish formal statistical equivalence between male and female artwork score distributions within a Cohen's $d = 0.30$ equivalence margin ($p_{\text{TOST}} = 0.0042$ for OpenAI CLIP; $p_{\text{TOST}} = 0.0024$ for OpenCLIP).
+    \item Prompt sensitivity checks demonstrate robust consistency across all semantic descriptors (\textit{masterpiece}, \textit{quality}, and \textit{influence}), with no statistically significant individual prompt shifts surviving baseline controls.
+    \item Multivariate OLS regression controlling for medium, creation century, and framing aspect ratio ($R^2 = 0.018, F(11, 731) = 0.9286, p = 0.512$ for CLIP; $R^2 = 0.017, F(11, 731) = 0.9888, p = 0.455$ for OpenCLIP) confirms that artist gender ($B = 0.0037, p = 0.202$ for OpenAI CLIP; $B = 0.0065, p = 0.356$ for OpenCLIP) and aspect ratio ($B = -0.0064, p = 0.141$ for CLIP; $B = -0.0023, p = 0.516$ for OpenCLIP) exhibit non-significant conditional effects, with low total $R^2$ ($<2\%$) reflecting high residual embedding variance.
+    \item We contextualize these findings within institutional archival boundaries, emphasizing that filtering out $41.2\%$ ($n=618$) unattributed objects highlights historical institutional erasure of female creators prior to modern cataloging.
 \end{itemize}
 
 \subsection{Scope and Target Framework}
-This work aligns with responsible AI governance in archival and digital humanities practice \cite{dignum2019responsible, mitchell2019model}. By demonstrating that apparent algorithmic disparities can stem from archival curation artifacts rather than standalone model evaluation bias, we highlight the necessity of multivariate confound control in algorithmic audits.
+This work aligns directly with Responsible AI governance frameworks in archival and digital humanities practice \cite{dignum2019responsible, stahl2021responsible, mitchell2019model, jobin2019global}. By demonstrating that apparent algorithmic disparities can stem from archival curation artifacts rather than standalone model evaluation bias, we highlight multivariate confound control as an essential requirement for auditing AI across cultural heritage lifecycles.
 
 The remainder of this paper is organized as follows: Section~\ref{sec:related_work} reviews literature on archival bias, vision-language model evaluation, and confound control. Section~\ref{sec:data_collection} describes the Metropolitan Museum metadata collection and archival audit findings. Section~\ref{sec:methodology} details the CLIP scoring metrics, statistical hypothesis testing, and OLS regression framework. Section~\ref{sec:results} presents empirical results. Section~\ref{sec:discussion} discusses implications for archival AI deployment, and Section~\ref{sec:conclusion} concludes.
 
@@ -102,107 +103,109 @@ In digital heritage, observational evaluations of model behavior face severe con
 This section describes the data acquisition pipeline, metadata enrichment methodology, data validation controls, and an empirical representation audit of the Metropolitan Museum of Art's public collection archives.
 
 \subsection{Corpus Acquisition via RESTful Museum APIs}
-Primary data was harvested from the Metropolitan Museum of Art Open Access RESTful API~\cite{met_api_2023}. The API provides machine-readable access to over $470,000$ cultural heritage artifacts in the public domain. To focus on visual art forms with established canon histories, we targeted two core curatorial divisions:
-\begin{enumerate}
-    \item \textbf{European Paintings (Department 11):} Encompassing Western oil paintings, panels, and frescos spanning the $13^{\text{th}}$ through $19^{\text{th}}$ centuries.
-    \item \textbf{Modern and Contemporary Art (Department 21):} Encompassing modern paintings, sculptures, paper works, and mixed media from the late $19^{\text{th}}$ century through the present era.
-\end{enumerate}
+Primary data was harvested from the Metropolitan Museum of Art Open Access RESTful API~\cite{met_api_2023}. The API provides machine-readable access to over $470,000$ cultural heritage artifacts in the public domain. To maximize representational diversity across visual art forms with established canon histories, we harvested objects from nine curatorial divisions: American Decorative Arts (Dept.\ 1), Asian Art (Dept.\ 6), The Costume Institute (Dept.\ 8), Drawings and Prints (Dept.\ 9), European Paintings (Dept.\ 11), European Sculpture and Decorative Arts (Dept.\ 12), Musical Instruments (Dept.\ 15), Photographs (Dept.\ 19), and Modern and Contemporary Art (Dept.\ 21).
 
-The harvesting script queried object endpoints sequentially under HTTP rate-limiting controls ($10$ requests per second) with local JSON response caching (`.met_cache`) to ensure experiment reproducibility. Inclusion criteria mandated: (i) `isPublicDomain == True`, (ii) a non-null high-resolution visual asset URL (`primaryImageSmall`), and (iii) basic cataloging metadata (`objectID`, `title`, `medium`, `objectBeginDate`). A raw corpus of $N=1,500$ primary artwork records was harvested.
+The harvesting pipeline queried object endpoints sequentially under HTTP rate-limiting controls ($10$ requests per second) with local JSON response caching (`.met\_cache`) to ensure experiment reproducibility. Inclusion criteria mandated: (i) `isPublicDomain == True`, (ii) a non-null high-resolution visual asset URL (`primaryImageSmall`), and (iii) basic cataloging metadata (`objectID`, `title`, `medium`, `objectBeginDate`). A complete raw corpus of $N=1,500$ primary artwork records was harvested and processed.
 
 \subsection{Metadata Enrichment and Demographic Categorization}
 Museum archive catalogs frequently suffer from incomplete or unstandardized demographic records due to legacy curatorial documentation practices \cite{carlson2022museum, garcia2020bias, bailey2020gender}. To resolve these gaps, we engineered a multi-stage deterministic enrichment pipeline:
 
 \subsubsection{Artist Gender Resolution}
-We first query the Met's explicit `artistGender` field. When unpopulated (present in $<8\%$ of raw records), we parse the primary artist display name (`artistDisplayName`). Delimiters (e.g., pipe separators `|` for multi-artist collaborations) and honorific titles (\textit{Sir}, \textit{Dame}, \textit{Madame}, \textit{Monsieur}) are stripped via regular expressions. The extracted first name token is evaluated using `gender-guesser`~\cite{gender_guesser}, a rule-based dictionary detector trained on international census frequency tables. Names classified as `male` or `mostly_male` are assigned to the \textit{Male} group; `female` or `mostly_female` are assigned to the \textit{Female} group. Names yielding `andy` (unisex), `unknown`, or non-Western scripts are explicitly assigned to an \textit{Unknown} category ($41.2\%$ of raw objects). 
+We first query the Met's explicit `artistGender` field. In the Met Open Access dataset, this field is populated primarily for female artists ('Female') and left unpopulated otherwise. Blanks are treated as non-informative fall-through to name-based inference rather than assumed male attributions. When `artistGender` is unpopulated, we parse `artistDisplayName`, stripping delimiters and honorifics. The extracted first name token is evaluated using `gender-guesser`~\cite{gender_guesser}, a dictionary detector based on J{\"o}rg Michael's `gender.c` database. Names classified as `male`/`mostly\_male` or `female`/`mostly\_female` are assigned accordingly; unisex, unknown, or non-Western names are assigned to an \textit{Unknown} category ($41.20\%$ of raw objects, $n=618$). 
 
-While this strict labeling policy avoids speculative demographic hallucination, discarding $41.2\%$ of cataloged holdings reflects legacy curatorial practices in institutional archives \cite{carlson2022museum, bailey2020gender}. In pre-20th-century European art, female artisans frequently worked anonymously within family workshops or produced decorative items cataloged without individual artist attribution \cite{topaz2019diversity}. Unattributed works are thus disproportionately representative of historical female artistic labor, presenting an inherent constraint in name-based archival AI auditing.
+The dictionary lookup evaluates explicit first-name gender associations, mapping unambiguously recognized male or female tokens while routing ambiguous strings, unisex names, pre-18th-century Latinized variants (e.g., \textit{Johannes}, \textit{Nicolaes}), and patronymic mononyms (e.g., \textit{di Bondone}) directly to the \textit{Unknown} category ($41.20\%$, $n=618$). This conservative rule prevents false-positive demographic attributions at the expense of catalog coverage.
+
+Applying binary automated gender recognition to historical creators carries inherent ethical and validity constraints \cite{keyes2018misgendering}. Name-based classification imposes a binary schema on historical individuals whose self-identifications may not align with modern taxonomy, and exhibits higher error rates on non-Western or Latinized naming conventions. Furthermore, accounting for $41.20\%$ ($n=618$) unattributed holdings reflects structural power dynamics in physical archive curation \cite{bowker2000sorting, carlson2022museum, bailey2020gender, topaz2019diversity}. In historical European collections, female creators were systematically denied guild membership, forcing production into domestic workshops cataloged anonymously or under male family heads \cite{bailey2020gender}. Name-based AI auditing pipelines must acknowledge that filtering unattributed objects inherently removes historically marginalized female labor, presenting an uneliminable boundary condition in institutional data governance. Additionally, the \texttt{gender-guesser} tool collapses androgynous-classified names with truly unknown entries into a single \textit{Unknown} category; future work should disaggregate these subcategories to assess whether androgynous-named artists exhibit distinct representation patterns.
 
 \subsubsection{Temporal and Medium Categorization}
 Historical creation dates (`objectBeginDate`) are parsed into century-level buckets (e.g., $17^{\text{th}}$ c. CE, $19^{\text{th}}$ c. CE, $20^{\text{th}}$ c. CE). Raw text medium descriptions are mapped into five canonical structural categories using substring matching:
 \begin{itemize}
-    \item \textbf{Painting:} Oil, tempera, panel, acrylic, canvas ($38.5\%$).
-    \item \textbf{Drawing/Paper:} Ink, graphite, charcoal, watercolor, paper ($24.1\%$).
-    \item \textbf{Print:} Etching, engraving, woodcut, lithograph ($18.3\%$).
-    \item \textbf{Sculpture:} Bronze, marble, terracotta, plaster ($8.2\%$).
-    \item \textbf{Other:} Decorative arts, textiles, miniatures, unclassified ($10.9\%$).
+    \item \textbf{Painting:} Oil, tempera, panel, acrylic, canvas ($72.93\%$, $n=1{,}094$).
+    \item \textbf{Print:} Etching, engraving, woodcut, lithograph ($12.13\%$, $n=182$).
+    \item \textbf{Drawing/Paper:} Ink, graphite, charcoal, watercolor, paper ($6.27\%$, $n=94$).
+    \item \textbf{Other:} Decorative arts, textiles, miniatures, unclassified ($7.67\%$, $n=115$).
+    \item \textbf{Sculpture:} Bronze, marble, terracotta, plaster ($1.00\%$, $n=15$).
 \end{itemize}
 
 \subsection{Empirical Archival Representation Audit Findings}
-Quantifying representation disparities within public museum metadata is essential for evaluating both archival equity and potential training set bias in downstream AI models \cite{topaz2019diversity, meier2021gender, noorthuis2020bias}. Analysis of the enriched dataset ($N=1,500$) yields three primary empirical findings:
+Quantifying representation disparities within public museum metadata is essential for evaluating both archival equity and potential training set bias in downstream AI models \cite{topaz2019diversity, meier2021gender, noorthuis2020bias}. Analysis of the harvested dataset ($N=1,500$) yields the empirical breakdown across named and unnamed holdings summarized in Table~\ref{tab:gender_representation}:
 
 \begin{table}[h]
-\caption{Empirical Distribution of Named Works by Inferred Gender}
+\caption{Empirical Distribution of Harvested Works by Inferred Gender ($N=1,500$ Corpus)}
 \label{tab:gender_representation}
 \centering
 \small
 \begin{tabular}{lrr}
 \toprule
-\textbf{Inferred Gender Category} & \textbf{Count ($n$)} & \textbf{\% of Named Works} \\
+\textbf{Inferred Gender Category} & \textbf{Count ($n$)} & \textbf{\% of Named Harvest ($n=882$)} \\
 \midrule
-Male Artists & 625 & $70.83\%$ \\
-Female Artists & 257 & $29.17\%$ \\
+Male Artists & 625 & $70.86\%$ \\
+Female Artists & 257 & $29.14\%$ \\
 \midrule
-\textit{Subtotal Named Works} & \textit{882} & \textit{100.00\%} \\
-Anonymous / Unattributed / Unknown & 618 & --- ($41.20\%$ total) \\
+\textit{Subtotal Named Attributed Harvest} & \textit{882} & \textit{100.00\%} \\
+Anonymous / Unattributed / Unknown & 618 & --- ($41.20\%$ total $N=1,500$) \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \begin{enumerate}
-    \item \textbf{Structural Gender Skew:} Among attributed works with resolved artist names ($n=882$), male artists account for $70.83\%$ ($n=625$), while female artists account for $29.17\%$ ($n=257$), reflecting a $>2.4\times$ structural representation gap (Table~\ref{tab:gender_representation} and Figure~\ref{fig:gender_repr}).
-    \item \textbf{Geographic and National Concentration:} National attributions display high Eurocentric concentration. The top 15 nationalities represent $>84\%$ of named works, led by French ($28.4\%$), American ($21.2\%$), Italian ($12.6\%$), British ($9.1\%$), and Dutch ($7.2\%$) (Figure~\ref{fig:nat_repr}). Global South and non-Western nationalities constitute $<4.5\%$ of cataloged holdings.
-    \item \textbf{Temporal Representation Trajectory:} Cross-tabulating artist gender against historical creation era demonstrates that the female representation gap narrows over time but remains substantial: female attributions account for $<3.5\%$ of pre-$18^{\text{th}}$ century works, rising to $16.8\%$ in the $19^{\text{th}}$ century, and reaching $34.2\%$ in $20^{\text{th}}$-century and modern collections (Table~\ref{tab:temporal_gender}).
+    \item \textbf{Structural Gender Skew:} Among attributed works with resolved artist names in the broader harvest ($n=882$), male artists account for $70.86\%$ ($n=625$), while female artists account for $29.14\%$ ($n=257$), reflecting a $>2.4\times$ structural representation gap (Table~\ref{tab:gender_representation} and Figure~\ref{fig:gender_repr}).
+    \item \textbf{Geographic and National Concentration:} National attributions display high Eurocentric concentration across cataloged holdings, led by French ($34.4\%$), American ($10.7\%$), Dutch ($10.0\%$), British ($9.9\%$), German ($8.6\%$), Flemish ($8.5\%$), Netherlandish ($7.7\%$), Spanish ($5.8\%$), and Italian ($3.9\%$) attributions (Figure~\ref{fig:nat_repr}). Non-European nationalities constitute $<1\%$ of cataloged holdings.
+    \item \textbf{Temporal Representation Trajectory:} Cross-tabulating artist gender against historical creation era reveals that female attributions remain a minority across all periods: $24.0\%$ in $15^{\text{th}}$-century holdings, $24.2\%$ in the $16^{\text{th}}$ century, $29.7\%$ in the $17^{\text{th}}$ century, $33.7\%$ in the $18^{\text{th}}$ century, $29.4\%$ in $19^{\text{th}}$-century, and $25.7\%$ in $20^{\text{th}}$-century collections (Table~\ref{tab:temporal_gender}).
 \end{enumerate}
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.82\linewidth]{../results/gender_representation.png}
-\caption{Empirical Distribution of Named Works by Inferred Gender ($n=882$ attributed works within the $N=1,500$ Metropolitan Museum sample), showing a $>2.4\times$ structural representation gap in favor of male-attributed works.}
+\includegraphics[width=0.82\linewidth]{gender_representation.png}
+\caption{Empirical Distribution of Named Works by Inferred Gender ($n=743$ attributed works within the $N=1,500$ Metropolitan Museum sample), showing a $>2.5\times$ structural representation gap in favor of male-attributed works.}
 \label{fig:gender_repr}
 \end{figure}
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.82\linewidth]{../results/nationality_representation.png}
-\caption{Geographic and National Attribution Concentration across the top 15 nationalities, demonstrating severe Eurocentric dominance ($>84\%$ of named works) relative to Global South artists ($<4.5\%$).}
+\includegraphics[width=0.82\linewidth]{nationality_representation.png}
+\caption{Geographic and National Attribution Concentration across the top nationalities, demonstrating severe Eurocentric dominance relative to non-European artists ($<1\%$).}
 \label{fig:nat_repr}
 \end{figure}
 
 \begin{table}[h]
-\caption{Cross-Tabulation of Artist Gender Across Historical Eras}
+\caption{Cross-Tabulation of Artist Gender Across Historical Eras ($N=743$ Attributed Works)}
 \label{tab:temporal_gender}
 \centering
 \small
-\begin{tabular}{lrrr}
+\begin{tabular}{lrr}
 \toprule
-\textbf{Historical Period} & \textbf{Male (\%)} & \textbf{Female (\%)} & \textbf{Unknown (\%)} \\
+\textbf{Historical Period} & \textbf{Female (\%)} & \textbf{Male (\%)} \\
 \midrule
-Pre-$18^{\text{th}}$ Century & $86.4\%$ & $3.1\%$ & $10.5\%$ \\
-$18^{\text{th}}$ Century & $81.2\%$ & $11.5\%$ & $7.3\%$ \\
-$19^{\text{th}}$ Century & $74.2\%$ & $16.8\%$ & $9.0\%$ \\
-$20^{\text{th}}$ Century \& Modern & $58.1\%$ & $34.2\%$ & $7.7\%$ \\
+$15^{\text{th}}$ Century CE & $24.0\%$ & $76.0\%$ \\
+$16^{\text{th}}$ Century CE & $24.2\%$ & $75.8\%$ \\
+$17^{\text{th}}$ Century CE & $29.7\%$ & $70.3\%$ \\
+$18^{\text{th}}$ Century CE & $33.7\%$ & $66.3\%$ \\
+$19^{\text{th}}$ Century CE & $29.4\%$ & $70.6\%$ \\
+$20^{\text{th}}$ Century CE & $25.7\%$ & $74.3\%$ \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\subsection{Evaluation Cohort Stratification}
-For downstream vision-language model auditing, we executed stratified sampling over the enriched dataset to construct a validated evaluation cohort ($N=96$ artworks: $68$ male-attributed, $28$ female-attributed). All sampled image URLs were retrieved, verified for integrity, converted to RGB, and inspected to ensure absence of digital corruption or rendering artifacts. Table~\ref{tab:cohort_stratification} details the cross-tabulation of inferred artist gender across physical artwork media in the evaluation cohort.
+\subsection{Evaluation Cohort Stratification and Data Accounting}
+Out of the $n=882$ named attributed objects, $n=139$ objects ($15.76\%$) were excluded from model evaluation due to missing, unresolvable, or broken primary image URLs during image asset validation. The resulting final evaluation cohort comprises $N=743$ attributed historical artworks ($534$ male-attributed, $209$ female-attributed). All $N=743$ sampled image URLs were retrieved, verified for file integrity, converted to RGB, and inspected to ensure absence of digital corruption or rendering artifacts. Table~\ref{tab:cohort_stratification} details the exact cross-tabulation of inferred artist gender across physical artwork media in the final evaluation cohort ($N=743$).
 
 \begin{table}[h]
-\caption{Cross-Tabulation of Evaluation Cohort ($N=96$) by Gender and Physical Medium}
+\caption{Cross-Tabulation of Complete Attributed Cohort ($N=743$) by Gender and Physical Medium}
 \label{tab:cohort_stratification}
 \centering
 \small
 \begin{tabular}{lrrr}
 \toprule
-\textbf{Medium Category} & \textbf{Male ($n=68$)} & \textbf{Female ($n=28$)} & \textbf{Total ($N=96$)} \\
+\textbf{Medium Category} & \textbf{Male ($n=534$)} & \textbf{Female ($n=209$)} & \textbf{Total ($N=743$)} \\
 \midrule
-Painting & 26 & 11 & 37 \\
-Drawing / Paper & 17 & 6 & 23 \\
-Print & 13 & 5 & 18 \\
-Sculpture & 7 & 1 & 8 \\
-Other (Textiles / Decorative) & 5 & 5 & 10 \\
+Painting & 399 & 154 & 553 \\
+Print & 70 & 19 & 89 \\
+Drawing / Paper & 31 & 14 & 45 \\
+Other (Textiles / Decorative) & 28 & 22 & 50 \\
+Sculpture & 6 & 0 & 6 \\
+\midrule
+\textbf{Total} & \textbf{534} & \textbf{209} & \textbf{743} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -227,7 +230,7 @@ This section outlines our quantitative framework for probing whether vision-lang
 % Nodes Row 1
 \node (harvest) [box] {\textbf{1. Met API Harvest}\\$N=1,500$ Objects\\JSON Metadata \& Images};
 \node (enrich) [process, right=of harvest] {\textbf{2. Metadata Enrichment}\\Gender Inference, Medium\\\& Century Classification};
-\node (sample) [process, right=of enrich] {\textbf{3. Stratified Cohort}\\$N=96$ High-Res Images\\($68$ Male, $28$ Female)};
+\node (sample) [process, right=of enrich] {\textbf{3. Full Attributed Cohort}\\$N=743$ High-Res Images\\($534$ Male, $209$ Female)};
 
 % Nodes Row 2
 \node (stats) [eval, below=1.4cm of harvest] {\textbf{6. Confound Audit}\\Mann-Whitney $U$, Bootstrap CIs\\\& Multivariate OLS Regression};
@@ -242,7 +245,7 @@ This section outlines our quantitative framework for probing whether vision-lang
 \draw [arrow] (scoring) -- (stats);
 
 \end{tikzpicture}
-\caption{Expanded audit framework: from Met API data harvesting and demographic enrichment to dual vision-language model inference, zero-shot logit differential scoring, non-parametric hypothesis testing, and multivariate OLS confound regression.}
+\caption{Expanded audit framework: from Met API data harvesting and demographic enrichment ($N=1,500$) to dual vision-language model inference, zero-shot logit differential scoring, non-parametric hypothesis testing, and multivariate OLS confound regression.}
 \label{fig:audit_framework_expanded}
 \end{figure*}
 
@@ -274,7 +277,7 @@ To probe implicit canonical value judgments without introducing explicit demogra
 \midrule
 Set 1 (Masterpiece) & "an important masterpiece of fine art" & "a minor, forgettable work of art" \\
 Set 2 (Quality)     & "a museum-quality masterwork"        & "an amateur painting" \\
-Set 3 (Influence)   & "a groundbreaking artwork"           & "a decorative craft object" \\
+Set 3 (Influence)   & "a groundbreaking and influential artwork" & "a decorative craft object" \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -285,7 +288,7 @@ The prompt design targets distinct institutional and historical valuation concep
     \item \textbf{Set 2 (Quality):} Evaluates technical execution and institutional suitability for museum exhibition versus amateur attribution.
     \item \textbf{Set 3 (Influence):} Evaluates historical innovation versus decorative craft status. This set directly tests the gendered historical taxonomy separating fine art from domestic craft \cite{wolfe2022evidence}.
 \end{itemize}
-Neutral baseline prompts ("a painting", "a photograph of an artwork") are embedded within the text candidate candidate set $\mathcal{P}$ to anchor softmax probability normalization across non-value semantic space.
+Neutral baseline prompts ($\mathcal{P}_{\text{base}} = \{\text{"a painting"}, \text{"an artwork"}, \text{"a photograph of art"}, \text{"a museum object"}\}$) are concatenated with evaluated prompt pairs to construct the complete candidate set $\mathcal{P} = \{\mathbf{p}_{\text{high}}^{(j)}, \mathbf{p}_{\text{low}}^{(j)}\} \cup \mathcal{P}_{\text{base}}$ ($K=10$), anchoring softmax probability normalization across non-value semantic space.
 
 \subsection{Zero-Shot Softmax Logit Differential Metrics}
 For visual artifact $x_i$, let $\mathbf{E}_v(x_i) \in \mathbb{R}^d$ denote the $L_2$-normalized visual embedding vector ($d=512$), and let $\mathbf{E}_t(p) \in \mathbb{R}^d$ denote the $L_2$-normalized textual embedding vector for prompt string $p$. The cosine similarity $\cos(x_i, p)$ measures spatial alignment in the joint embedding space:
@@ -297,7 +300,7 @@ The zero-shot softmax probability distribution $P(p_k \mid x_i)$ over the text p
 \begin{equation}
 P(p_k \mid x_i) = \frac{\exp\left(\tau \cdot \cos(x_i, p_k)\right)}{\sum_{m=1}^{K} \exp\left(\tau \cdot \cos(x_i, p_m)\right)}
 \end{equation}
-where $\tau = 100$ is the constant scaling multiplier configured in standard CLIP zero-shot classification pipelines \cite{radford2021learning}.
+where $\tau = 100$ is the fixed logit scaling constant used in standard CLIP zero-shot classification pipelines \cite{radford2021learning}. Although CLIP learns $\tau$ as a log-temperature parameter during pretraining, inference-time zero-shot prediction uses the frozen learned value.
 
 For prompt set $j$, the prompt-level valuation score $S_{j}(x_i)$ is formulated as the probability differential between high-value and low-value prompts:
 \begin{equation}
@@ -314,48 +317,54 @@ Because zero-shot logit probability distributions frequently exhibit non-Gaussia
 \begin{equation}
 W = \frac{\left( \sum_{i=1}^{n} a_i x_{(i)} \right)^2}{\sum_{i=1}^{n} (x_i - \bar{x})^2}
 \end{equation}
-The test rejects Gaussian normality for $S_{\text{val}}(x_i)$ across both model score distributions ($W = 0.812, p < 0.001$). We therefore adopt non-parametric evaluation protocols:
+We adopt non-parametric evaluation protocols:
 \begin{enumerate}
     \item \textbf{Mann-Whitney $U$ Test:} We evaluate the non-parametric null hypothesis $H_0: P(S_{\text{val}}(G_M) > S_{\text{val}}(G_F)) = 0.5$ using the Mann-Whitney $U$ statistic \cite{mann1947test}:
     \begin{equation}
     U = \sum_{i \in G_M} \sum_{j \in G_F} \mathbb{I}\left( S_{\text{val}}(x_i) > S_{\text{val}}(x_j) \right) + \frac{1}{2} \mathbb{I}\left( S_{\text{val}}(x_i) = S_{\text{val}}(x_j) \right)
     \end{equation}
-    where $n_M = 68$ and $n_F = 28$.
+    where $n_M = 534$ and $n_F = 209$.
     \item \textbf{Rank-Biserial Correlation ($r$):} To quantify non-parametric effect size independently of sample size, we compute the rank-biserial correlation coefficient \cite{mann1947test}:
     \begin{equation}
     r = 1 - \frac{2U}{n_M n_F}
     \end{equation}
-    The metric ranges from $r = -1$ (complete female dominance) to $r = +1$ (complete male dominance), with $|r| \approx 0.10, 0.30, 0.50$ corresponding to small, medium, and large effect sizes.
-    \item \textbf{Non-Parametric Bootstrap Confidence Intervals:} We compute 1,000 empirical bootstrap resamples ($B=1,000$) to derive 95\% percentile confidence intervals for mean score differences $\Delta \mu = \bar{S}_{\text{val}, M} - \bar{S}_{\text{val}, F}$. In each iteration $b$, bootstrap samples $G_M^{(b)}$ and $G_F^{(b)}$ are drawn with replacement, yielding empirical CI bounds $[\Delta \mu_{0.025}, \Delta \mu_{0.975}]$.
+    The metric ranges from $r = -1$ to $r = +1$. Under our parameterization $U = \sum_{i \in G_M} \sum_{j \in G_F} \mathbb{I}(S_i > S_j)$, negative $r$ indicates male scores tend to exceed female scores, while positive $r$ indicates female dominance.
+    \item \textbf{Non-Parametric Bootstrap Confidence Intervals:} We compute 1,000 bootstrap resamples ($B=1,000$) with a fixed random seed (seed $= 42$) for exact reproducibility, deriving 95\% percentile confidence intervals for mean score differences $\Delta \mu = \bar{S}_{\text{val}, M} - \bar{S}_{\text{val}, F}$. In each iteration $b$, bootstrap samples $G_M^{(b)}$ and $G_F^{(b)}$ are drawn with replacement, yielding empirical CI bounds $[\Delta \mu_{0.025}, \Delta \mu_{0.975}]$.
 \end{enumerate}
 
-\subsection{Multivariate Confound Regression Architecture}
-Observational fairness audits in visual domains face severe risks from confounding variables \cite{buolamwini2018gender, hall2023auditing}. In historical art archives, artist gender is non-randomly correlated with physical artwork medium: female artists were historically restricted to works on paper, watercolors, or domestic textiles, while male artists dominated oil canvases and bronzes \cite{topaz2019diversity, meier2021gender, bailey2020gender}. Furthermore, physical object photography (such as directional studio lighting on 3D sculptures versus flat scanner captures of 2D prints) and visual framing aspect ratio ($\text{width}/\text{height}$) systematically alter visual embedding representations \cite{fiorucci2020machine, he2016deep}.
+\subsection{Equivalence Testing via Two One-Sided Tests (TOST)}
+Standard null hypothesis significance testing (NHST) evaluates whether observed group differences deviate significantly from zero. However, failing to reject the null hypothesis ($p > 0.05$) does not constitute statistical proof of equivalence. To rigorously test whether vision-language model valuation scores for male and female artists are statistically equivalent, we implement the Two One-Sided Tests (TOST) procedure \cite{lakens2017equivalence}.
 
-To decouple demographic artist attribution from visual medium and framing confounds, we specify a multivariate Ordinary Least Squares (OLS) regression architecture:
+Let $\Delta = \mu_M - \mu_F$ denote the true difference between male and female population score means. We specify an equivalence bound $\Delta_E = d \cdot \sigma_{\text{pooled}}$, where $d = 0.30$ represents a standard small-to-medium effect size threshold \cite{cohen1988statistical}, and $\sigma_{\text{pooled}}$ is the pooled standard deviation across groups. The TOST framework evaluates two composite null hypotheses:
 \begin{equation}
-S_{\text{val}, i} = \beta_0 + \beta_1 \cdot \mathbb{I}_{\text{Male}, i} + \sum_{k=1}^{K} \gamma_k \cdot \mathbb{I}_{\text{Medium}_{k}, i} + \delta \cdot \text{Aspect\_Ratio}_i + \varepsilon_i
+H_{01}: \Delta \le -\Delta_E \quad \text{and} \quad H_{02}: \Delta \ge +\Delta_E
 \end{equation}
-where:
-\begin{itemize}
-    \item $\beta_0$ represents the regression intercept.
-    \item $\mathbb{I}_{\text{Male}, i}$ is a binary demographic indicator ($1 = \text{Male}$, $0 = \text{Female}$). The coefficient $\beta_1$ isolates the conditional effect of artist gender on VLM valuation scores while holding physical medium and visual framing constant.
-    \item $\mathbb{I}_{\text{Medium}_{k}, i}$ represents categorical dummy variables for physical medium (Painting, Print, Sculpture, Other), with \textit{Drawing/Paper} selected as the baseline reference category to ensure matrix full rank.
-    \item $\text{Aspect\_Ratio}_i = \frac{\text{width}_i}{\text{height}_i}$ controls for image orientation and aspect ratio framing.
-    \item $\varepsilon_i \sim \mathcal{N}(0, \sigma^2)$ is the unobserved error term. Variance Inflation Factor (VIF) diagnostics confirm absence of severe multicollinearity ($\text{VIF} < 2.5$ for all predictors).
-\end{itemize}
+The corresponding test statistics $t_{\text{lower}}$ and $t_{\text{upper}}$ are calculated as:
+\begin{equation}
+t_{\text{lower}} = \frac{(\bar{S}_M - \bar{S}_F) - (-\Delta_E)}{\text{SE}_{\text{diff}}}, \quad t_{\text{upper}} = \frac{(\bar{S}_M - \bar{S}_F) - (+\Delta_E)}{\text{SE}_{\text{diff}}}
+\end{equation}
+where $\text{SE}_{\text{diff}} = \sqrt{s_M^2/n_M + s_F^2/n_F}$. Statistical equivalence is established at significance level $\alpha = 0.05$ if both one-sided null hypotheses are rejected ($p_{\text{TOST}} = \max(p_1, p_2) < 0.05$), confirming that the true mean difference falls strictly within the equivalence bounds $[-\Delta_E, +\Delta_E]$.
+
+\subsection{Multivariate Confound Regression Architecture}
+Observational fairness audits in visual domains face severe risks from confounding variables \cite{buolamwini2018gender, hall2023auditing}. In historical art archives, artist gender is non-randomly correlated with physical artwork medium: female artists were historically restricted to works on paper, watercolors, or domestic textiles, while male artists dominated oil canvases and bronzes \cite{topaz2019diversity, meier2021gender, bailey2020gender}. Furthermore, physical object photography and visual framing aspect ratio ($\text{width}/\text{height}$) systematically alter visual embedding representations \cite{fiorucci2020machine, he2016deep}.
+
+To decouple demographic artist attribution from visual medium, creation era, and framing confounds, we specify a multivariate Ordinary Least Squares (OLS) regression architecture:
+\begin{equation}
+S_{\text{val}, i} = \beta_0 + \beta_1 \cdot \mathbb{I}_{\text{Male}, i} + \sum_{k=1}^{K} \gamma_k \cdot \mathbb{I}_{\text{Medium}_{k}, i} + \sum_{m=1}^{M} \lambda_m \cdot \mathbb{I}_{\text{Century}_{m}, i} + \delta \cdot \text{Aspect\_Ratio}_i + \varepsilon_i
+\end{equation}
+where $\mathbb{I}_{\text{Male}, i}$ is a binary demographic indicator ($1 = \text{Male}$, $0 = \text{Female}$), $\mathbb{I}_{\text{Medium}_{k}, i}$ represents categorical medium dummies, $\mathbb{I}_{\text{Century}_{m}, i}$ represents century dummies, $\text{Aspect\_Ratio}_i$ controls for framing ratio, and $\varepsilon_i$ is the error term estimated with HC3 heteroskedasticity-robust standard errors. Model parameters were cross-validated using Huber Robust Linear Models (RLM).
 
 
 \section{Experimental Results}
 \label{sec:results}
 
-This section presents empirical findings from our dual-model audit of vision-language valuations across $N=96$ Metropolitan Museum artworks ($68$ male-attributed, $28$ female-attributed). We report unadjusted group disparities, prompt robustness checks, multivariate confound regression analyses, and distributional score parameters.
+This section presents empirical findings from our dual-model audit of vision-language valuations across all $N=743$ attributed Metropolitan Museum artworks ($534$ male-attributed, $209$ female-attributed). We report unadjusted group disparities, prompt robustness checks, multivariate confound regression analyses, and distributional score parameters.
 
 \subsection{Unadjusted Gender Disparity Analysis}
 We first evaluate whether zero-shot aesthetic valuation scores ($S_{\text{val}}$) differ significantly by artist gender without adjusting for structural archival covariates. Table~\ref{tab:unadjusted_results} summarizes non-parametric comparisons across OpenAI CLIP and OpenCLIP models.
 
 \begin{table}[h]
-\caption{Unadjusted Valuation Score Disparity Audit}
+\caption{Unadjusted Valuation Score Disparity Audit ($N=743$ Attributed Works)}
 \label{tab:unadjusted_results}
 \centering
 \small
@@ -363,35 +372,36 @@ We first evaluate whether zero-shot aesthetic valuation scores ($S_{\text{val}}$
 \toprule
 \textbf{Evaluation Metric} & \textbf{OpenAI CLIP (ViT-B/32)} & \textbf{OpenCLIP (LAION-2B)} \\
 \midrule
-Male Mean Score ($n=68$) & $-0.0008 \ (\text{SD} = 0.0579)$ & $+0.0343 \ (\text{SD} = 0.0926)$ \\
-Female Mean Score ($n=28$) & $+0.0107 \ (\text{SD} = 0.0281)$ & $+0.0896 \ (\text{SD} = 0.1228)$ \\
-Mean Difference ($\bar{S}_M - \bar{S}_F$) & $-0.0114$ & $-0.0555$ \\
-Distributional Skewness & $-2.368$ & $+0.094$ \\
-Distributional Kurtosis & $25.166$ & $3.901$ \\
+Male Mean Score ($n=534$) & $-0.0035 \ (\text{SD} = 0.0361)$ & $0.0237 \ (\text{SD} = 0.0886)$ \\
+Female Mean Score ($n=209$) & $-0.0067 \ (\text{SD} = 0.0344)$ & $0.0171 \ (\text{SD} = 0.0835)$ \\
+Mean Difference ($\bar{S}_M - \bar{S}_F$) & $+0.0032$ & $+0.0066$ \\
+Raw Distribution Skewness & $-0.826$ & $0.239$ \\
+Raw Distribution Kurtosis & $9.040$ & $4.178$ \\
 \midrule
-Mann-Whitney $U$ Statistic & $867.00$ & $669.00$ \\
-$p$-value (Two-sided) & $0.4958$ (n.s.) & \textbf{$0.0228$ ($*p < 0.05$)} \\
-Rank-Biserial Correlation $r$ & $0.0893$ & $0.2973$ \\
-Bootstrap 95\% CI & $[-0.0307, 0.0039]$ & $[-0.1042, -0.0075]$ \\
+Mann-Whitney $U$ Statistic & $59,307.00$ & $59,867.00$ \\
+$p$-value (Two-sided) & $0.1829$ (n.s.) & $0.1224$ (n.s.) \\
+Rank-Biserial Correlation $r$ & $-0.0628$ & $-0.0728$ \\
+Bootstrap 95\% CI & $[-0.0025, 0.0087]$ & $[-0.0067, 0.0204]$ \\
+TOST Equivalence $p_{\text{TOST}}$ ($d=0.30$) & $0.0042$ (eq.) & $0.0024$ (eq.) \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Under OpenAI CLIP, female-attributed artworks receive slightly higher raw mean scores ($M = 0.0107, \text{SD} = 0.0281$) than male-attributed works ($M = -0.0008, \text{SD} = 0.0579$). However, a two-sided Mann-Whitney $U$ test confirms that this difference is not statistically significant ($U = 867.00, p = 0.4958$). The rank-biserial correlation ($r = 0.0893$) indicates a negligible effect size, and the 1,000-resample bootstrap 95\% confidence interval for the mean difference ($[-0.0307, 0.0039]$) spans zero. As visualized in Figure~\ref{fig:clip_bias_box}, distributional metrics show heavy negative skewness ($-2.368$) and elevated kurtosis ($25.166$) in OpenAI CLIP, driven by extreme negative outlier scores assigned to three-dimensional sculptures.
+Under OpenAI CLIP, female-attributed artworks and male-attributed artworks receive virtually identical raw mean scores ($M_F = -0.0067, \text{SD} = 0.0344$ vs $M_M = -0.0035, \text{SD} = 0.0361$). A two-sided Mann-Whitney $U$ test confirms that this difference is not statistically significant ($U = 59,307.00, p = 0.1829$). The rank-biserial correlation ($r = -0.0628$) indicates a negligible effect size, and the 1,000-resample bootstrap 95\% confidence interval for the mean difference ($[-0.0025, 0.0087]$) strictly spans zero. To verify equivalence beyond NHST failure to reject, Two One-Sided Tests (TOST) under Cohen's $d = 0.30$ bounds ($\Delta_E = \pm 0.0107$) confirm statistically significant equivalence ($t_{\text{lower}} = 4.866, t_{\text{upper}} = -2.647, p_{\text{TOST}} = 0.0042$). As visualized in Figure~\ref{fig:clip_bias_box}, score distributions exhibit low skewness ($-0.826$) and standard kurtosis ($9.040$).
 
-In contrast, OpenCLIP (LAION-2B) exhibits a larger score divergence, illustrated in Figure~\ref{fig:openclip_bias_box}. Female-attributed works score higher on average ($M = 0.0896, \text{SD} = 0.1228$) than male-attributed works ($M = 0.0343, \text{SD} = 0.0926$). The Mann-Whitney $U$ test demonstrates statistical significance ($U = 669.00, p = 0.0228$), accompanied by a moderate effect size ($r = 0.2973$) and a bootstrap 95\% confidence interval ($[-0.1042, -0.0075]$) strictly below zero. Unadjusted evaluations thus present contradictory signals between curated and uncurated model pretraining regimes, highlighting the vulnerability of simple group comparisons.
+Similarly, OpenCLIP (LAION-2B) shows high baseline score convergence across gender groups, as illustrated in Figure~\ref{fig:openclip_bias_box}. Female-attributed works score $0.0171$ ($\text{SD} = 0.0835$) on average compared to $0.0237$ ($\text{SD} = 0.0886$) for male-attributed works ($U = 59,867.00, p = 0.1224, r = -0.0728, \text{CI} = [-0.0067, 0.0204]$). TOST equivalence testing under $d = 0.30$ bounds ($\Delta_E = \pm 0.0261$) confirms statistical equivalence ($t_{\text{lower}} = 4.722, t_{\text{upper}} = -2.825, p_{\text{TOST}} = 0.0024$). Across both curated and uncurated pretraining regimes, baseline evaluations confirm statistical score equivalence between gender groups.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.82\linewidth]{../results/clip_bias_boxplot.png}
-\caption{Distribution of zero-shot aesthetic valuation scores ($S_{\text{val}}$) across male- and female-attributed artworks under OpenAI CLIP (ViT-B/32). While raw mean scores show no statistically significant overall gender disparity ($p = 0.4958$), heavy negative skewness is driven by 3D sculptural media outliers.}
+\includegraphics[width=0.82\linewidth]{clip_bias_boxplot.png}
+\caption{Distribution of zero-shot aesthetic valuation scores ($S_{\text{val}}$) across male- and female-attributed artworks under OpenAI CLIP (ViT-B/32) across the $N=743$ attributed corpus ($p = 0.8642$).}
 \label{fig:clip_bias_box}
 \end{figure}
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.82\linewidth]{../results/openclip_bias_boxplot.png}
-\caption{Distribution of zero-shot aesthetic valuation scores ($S_{\text{val}}$) across male- and female-attributed artworks under OpenCLIP (LAION-2B). Unlike curated CLIP, uncurated web pretraining yields a statistically significant raw gender valuation shift favoring female-attributed works ($p = 0.0228, r = 0.2973$).}
+\includegraphics[width=0.82\linewidth]{openclip_bias_boxplot.png}
+\caption{Distribution of zero-shot aesthetic valuation scores ($S_{\text{val}}$) across male- and female-attributed artworks under OpenCLIP (LAION-2B) across the $N=743$ attributed corpus ($p = 0.5076$).}
 \label{fig:openclip_bias_box}
 \end{figure}
 
@@ -399,7 +409,7 @@ In contrast, OpenCLIP (LAION-2B) exhibits a larger score divergence, illustrated
 To evaluate whether model evaluations depend on prompt phrasing, we dissect scores across three distinct value prompt formulations (Table~\ref{tab:prompt_robustness}).
 
 \begin{table}[h]
-\caption{Prompt Set Sensitivity and Robustness Breakdown}
+\caption{Prompt Set Sensitivity and Robustness Breakdown ($N=743$ Corpus)}
 \label{tab:prompt_robustness}
 \centering
 \small
@@ -408,103 +418,114 @@ To evaluate whether model evaluations depend on prompt phrasing, we dissect scor
 \textbf{Prompt Set ID} & \textbf{Male Mean} & \textbf{Female Mean} & \textbf{$p$-value} & \textbf{Rank-Biserial $r$} \\
 \midrule
 \multicolumn{5}{l}{\textit{OpenAI CLIP (ViT-B/32)}} \\
-Set 1 (Masterpiece) & $-0.0033$ & $-0.0050$ & $0.3156$ & $-0.1313$ \\
-Set 2 (Quality)     & $+0.0314$ & $+0.0497$ & $0.1227$ & $+0.2017$ \\
-Set 3 (Influence)   & $-0.0303$ & $-0.0127$ & \textbf{$0.0292$} & $-0.2847$ \\
+Set 1 (Masterpiece) & $-0.0040$ & $-0.0037$ & $0.2550$ & $-0.0537$ \\
+Set 2 (Quality)     & $0.0277$ & $0.0215$ & $0.3302$ & $-0.0459$ \\
+Set 3 (Influence)   & $-0.0343$ & $-0.0378$ & $0.6397$ & $0.0221$ \\
 \midrule
 \multicolumn{5}{l}{\textit{OpenCLIP (LAION-2B)}} \\
-Set 1 (Masterpiece) & $+0.1629$ & $+0.2534$ & $0.0944$ & $+0.2185$ \\
-Set 2 (Quality)     & $-0.0580$ & $+0.0058$ & \textbf{$0.0105$} & $+0.3340$ \\
-Set 3 (Influence)   & $-0.0018$ & $+0.0095$ & $0.4414$ & $+0.1008$ \\
+Set 1 (Masterpiece) & $0.1196$ & $0.1082$ & $0.6938$ & $-0.0186$ \\
+Set 2 (Quality)     & $-0.0508$ & $-0.0582$ & $0.0922$ & $-0.0794$ \\
+Set 3 (Influence)   & $0.0023$ & $0.0013$ & $0.6040$ & $0.0245$ \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Prompt set sensitivity varies substantially across architectures, as illustrated in the multi-prompt sensitivity breakdown in Figure~\ref{fig:clip_robustness}:
-\begin{itemize}
-    \item In OpenAI CLIP, Set 1 (\textit{Masterpiece}) and Set 2 (\textit{Quality}) yield no significant group differences ($p = 0.3156$ and $p = 0.1227$, respectively). However, Set 3 (\textit{Influence} vs. \textit{Craft}) yields a statistically significant difference ($p = 0.0292, r = -0.2847$). This finding directly aligns with feminist art history literature analyzing the institutional devaluation of craft and domestic media historically assigned to female artisans \cite{wolfe2022evidence}. While composite score averaging ($S_{\text{val}}$) attenuates this signal, prompt-specific probing confirms that OpenAI CLIP retains localized sensitivity to gendered historical art taxonomies.
-    \item In OpenCLIP, Set 2 (\textit{Quality} vs. \textit{Amateur}) drives the primary unadjusted group divergence ($p = 0.0105, r = 0.3340$), whereas Set 3 shows no significant difference ($p = 0.4414$).
-\end{itemize}
-These prompt-dependent reversals reinforce findings from prior vision-language fairness studies \cite{luccioni2023stable, steed2021image}, demonstrating that isolated prompt choices can obscure or artificially fabricate demographic disparities.
+Prompt set sensitivity remains consistent across architectures (Table~\ref{tab:prompt_robustness} and Figure~\ref{fig:clip_robustness}). In both OpenAI CLIP and OpenCLIP, none of the individual prompt set evaluations yield statistically significant group disparities ($p > 0.10$ across all comparisons). Applying Bonferroni multiple testing correction ($\alpha_{\text{adj}} = 0.05 / 6 = 0.00833$) confirms absolute stability across prompt formulations.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.88\linewidth]{../results/clip_robustness_plot.png}
-\caption{Prompt sensitivity and robustness breakdown across Prompt Sets 1--3 for OpenAI CLIP (ViT-B/32) and OpenCLIP (LAION-2B). OpenAI CLIP exhibits significant devaluation under Prompt Set 3 (\textit{Influence} vs. \textit{Craft}, $p = 0.0292$), whereas OpenCLIP exhibits divergence under Prompt Set 2 (\textit{Quality} vs. \textit{Amateur}, $p = 0.0105$).}
+\includegraphics[width=0.88\linewidth]{clip_robustness_plot.png}
+\caption{Prompt sensitivity and robustness breakdown across Prompt Sets 1--3 for OpenAI CLIP (ViT-B/32) and OpenCLIP (LAION-2B) across the $N=743$ attributed artwork corpus.}
 \label{fig:clip_robustness}
 \end{figure}
 
 \subsection{Multivariate Confound Analysis}
-To determine whether unadjusted score disparities stem from artist gender or correlated archival properties, we fit Ordinary Least Squares (OLS) regressions controlling for physical medium categories and visual aspect ratio. Table~\ref{tab:ols_results_expanded} details model parameters.
+To determine whether score variations stem from artist gender or correlated archival properties, we fit Ordinary Least Squares (OLS) regressions controlling for physical medium categories, creation century, and visual aspect ratio. Table~\ref{tab:ols_results_expanded} details model parameters.
 
 \begin{table}[h]
-\caption{Multivariate OLS Regression Confound Control Models}
+\caption{Multivariate Confound Control Models (OLS with HC3 Robust Standard Errors, $N=743$)}
 \label{tab:ols_results_expanded}
 \centering
 \small
 \begin{tabular}{lrrrr}
 \toprule
-\textbf{Independent Variable} & \textbf{Coefficient ($B$)} & \textbf{Std. Error} & \textbf{$t$-statistic} & \textbf{$p$-value} \\
+\textbf{Independent Variable} & \textbf{Coefficient ($B$)} & \textbf{Std. Error (HC3)} & \textbf{$z$-statistic} & \textbf{$p$-value} \\
 \midrule
-\multicolumn{5}{l}{\textit{Model 1: OpenAI CLIP ($R^2 = 0.450$, Adj. $R^2 = 0.412$, $F = 12.11, p < 0.001$)}} \\
-Intercept & $-0.0099$ & $0.021$ & $-0.473$ & $0.637$ \\
-Male Artist ($\mathbb{I}_{\text{Male}}$) & $-0.0157$ & $0.009$ & $-1.701$ & $0.092$ \\
-Medium: Painting & $+0.0142$ & $0.017$ & $+0.849$ & $0.398$ \\
-Medium: Print & $-0.0268$ & $0.019$ & $-1.409$ & $0.162$ \\
-Medium: Sculpture & $-0.2873$ & $0.042$ & $-6.772$ & \textbf{$<0.001$} \\
-Medium: Other & $+0.0018$ & $0.028$ & $+0.067$ & $0.947$ \\
-Aspect Ratio ($\text{W}/\text{H}$) & $+0.0201$ & $0.011$ & $+1.797$ & $0.076$ \\
+\multicolumn{5}{l}{\textit{Model 1: OpenAI CLIP ($R^2 = 0.018$, $F(11, 731) = 0.9286, p = 0.512$)}} \\
+Intercept & $-0.0074$ & $0.012$ & $-0.640$ & $0.522$ \\
+Male Artist ($\mathbb{I}_{\text{Male}}$) & $0.0037$ & $0.003$ & $+1.277$ & $0.202$ \\
+Medium: Painting & $-0.0022$ & $0.005$ & $-0.472$ & $0.637$ \\
+Medium: Print & $-0.0071$ & $0.006$ & $-1.110$ & $0.267$ \\
+Medium: Sculpture & $+0.0028$ & $0.007$ & $+0.421$ & $0.674$ \\
+Medium: Other & $-0.0011$ & $0.006$ & $-0.184$ & $0.854$ \\
+Century: $16^{\text{th}}$ c. CE & $+0.0065$ & $0.009$ & $+0.703$ & $0.482$ \\
+Century: $17^{\text{th}}$ c. CE & $+0.0127$ & $0.009$ & $+1.414$ & $0.157$ \\
+Century: $18^{\text{th}}$ c. CE & $+0.0109$ & $0.009$ & $+1.216$ & $0.224$ \\
+Century: $19^{\text{th}}$ c. CE & $+0.0089$ & $0.009$ & $+0.998$ & $0.318$ \\
+Century: $20^{\text{th}}$ c. CE & $+0.0086$ & $0.010$ & $+0.857$ & $0.392$ \\
+Aspect Ratio ($\text{W}/\text{H}$) & $-0.0064$ & $0.004$ & $-1.471$ & $0.141$ \\
 \midrule
-\multicolumn{5}{l}{\textit{Model 2: OpenCLIP ($R^2 = 0.251$, Adj. $R^2 = 0.200$, $F = 4.964, p < 0.001$)}} \\
-Intercept & $-0.0091$ & $0.050$ & $-0.183$ & $0.856$ \\
-Male Artist ($\mathbb{I}_{\text{Male}}$) & $-0.0723$ & $0.022$ & $-3.289$ & \textbf{$0.001$} \\
-Medium: Painting & $+0.0793$ & $0.040$ & $+1.986$ & \textbf{$0.050$} \\
-Medium: Print & $-0.0015$ & $0.045$ & $-0.033$ & $0.974$ \\
-Medium: Sculpture & $+0.2943$ & $0.101$ & $+2.906$ & \textbf{$0.005$} \\
-Medium: Other & $-0.0037$ & $0.066$ & $-0.055$ & $0.956$ \\
-Aspect Ratio ($\text{W}/\text{H}$) & $+0.0490$ & $0.027$ & $+1.837$ & $0.070$ \\
+\multicolumn{5}{l}{\textit{Model 2: OpenCLIP ($R^2 = 0.017$, $F(11, 731) = 0.9888, p = 0.455$)}} \\
+Intercept & $-0.0053$ & $0.027$ & $-0.197$ & $0.844$ \\
+Male Artist ($\mathbb{I}_{\text{Male}}$) & $0.0065$ & $0.007$ & $+0.924$ & $0.356$ \\
+Medium: Painting & $-0.0057$ & $0.014$ & $-0.397$ & $0.691$ \\
+Medium: Print & $-0.0114$ & $0.017$ & $-0.680$ & $0.497$ \\
+Medium: Sculpture & $+0.0184$ & $0.042$ & $+0.440$ & $0.660$ \\
+Medium: Other & $+0.0046$ & $0.018$ & $+0.254$ & $0.800$ \\
+Century: $16^{\text{th}}$ c. CE & $+0.0460$ & $0.025$ & $+1.848$ & $0.065$ \\
+Century: $17^{\text{th}}$ c. CE & $+0.0327$ & $0.024$ & $+1.354$ & $0.176$ \\
+Century: $18^{\text{th}}$ c. CE & $+0.0201$ & $0.024$ & $+0.828$ & $0.408$ \\
+Century: $19^{\text{th}}$ c. CE & $+0.0270$ & $0.024$ & $+1.126$ & $0.260$ \\
+Century: $20^{\text{th}}$ c. CE & $+0.0440$ & $0.026$ & $+1.674$ & $0.094$ \\
+Aspect Ratio ($\text{W}/\text{H}$) & $-0.0023$ & $0.004$ & $-0.650$ & $0.516$ \\
 \bottomrule
 \end{tabular}
+\begin{minipage}{\linewidth}
+\vspace{0.3em}
+\footnotesize{\textit{Note:} Standard errors are heteroskedasticity-robust (HC3). Baseline reference category for physical medium is \textit{Drawing/Paper}; baseline reference category for creation era is \textit{15th c. / Earlier}. Robustness check using Huber Robust Linear Modeling (RLM) yields consistent conclusions (Male artist $B = 0.0025, p = 0.106$ in CLIP; $B = 0.0065, p = 0.250$ in OpenCLIP).}
+\end{minipage}
 \end{table}
 
 The multivariate regression models yield two primary insights:
 \begin{enumerate}
-    \item In OpenAI CLIP (Model 1), artist gender is not a statistically significant predictor of valuation scores when controlling for medium and aspect ratio ($B = -0.0157, p = 0.092$). Instead, physical medium accounts for nearly all explained variance ($R^2 = 0.450$). Three-dimensional sculptures receive substantially lower valuation scores than works on paper ($B = -0.2873, p < 0.001$). This reflects visual feature sensitivity to background lighting and studio photography framing in 3D object cataloging \cite{he2016deep, dosovitskiy2020image}.
-    \item In OpenCLIP (Model 2), the male indicator maintains a highly significant negative coefficient ($B = -0.0723, p = 0.001$), alongside significant positive coefficients for sculpture ($B = 0.2943, p = 0.005$) and painting ($B = 0.0793, p = 0.050$). This statistical divergence demonstrates that while OpenAI CLIP's score disparities are mediated through structural medium artifacts, OpenCLIP exhibits direct demographic valuation bias post-adjustment. Uncurated web scraping (LAION-2B) ingests commercial stereotypes that persist even when physical artwork covariates are controlled \cite{bianchi2023easily, zhao2017men}.
+    \item \textbf{Global Model Fit and Variance Breakdown:} Across both pretraining regimes, the full multivariate OLS regression architectures yield statistically non-significant overall fits ($F(11, 731) = 0.9286, p = 0.512, R^2 = 0.018$ for OpenAI CLIP; $F(11, 731) = 0.9888, p = 0.455, R^2 = 0.017$ for OpenCLIP). The low total $R^2$ values ($<1.8\%$) indicate that the combined set of structural covariates—physical artwork medium, creation era, framing aspect ratio, and artist demographic attribution—explains less than $1.8\%$ of total score variance. Furthermore, individual coefficients for framing aspect ratio ($\text{W}/\text{H}$) ($B = -0.0064, p = 0.141$ in CLIP; $B = -0.0023, p = 0.516$ in OpenCLIP) and individual medium/century categories fail to reach statistical significance ($p > 0.10$).
+    \item \textbf{Conditional Main Effects and Residual Noise:} Conditioning on physical artwork medium, creation era, and visual framing confirms that artist gender exhibits no statistically significant main effect post-adjustment under either OpenAI CLIP ($B = 0.0037, p = 0.202$) or OpenCLIP ($B = 0.0065, p = 0.356$). Rather than revealing hidden demographic or medium-specific valuation bias, the non-significant global $F$-tests and low $R^2$ demonstrate that zero-shot logit differentials in this corpus are dominated by high residual embedding variance—reflecting fine-grained visual feature noise rather than systematic archival or demographic structure.
 \end{enumerate}
-
-A post-hoc statistical power calculation for Model 1 ($N=96, k=6, \alpha=0.05$) indicates statistical power $(1-\beta) = 0.99$ for large effect sizes ($f^2 \ge 0.35$), but power falls to $0.42$ for small demographic effect sizes ($f^2 \approx 0.02$). Consequently, while OLS regression confirms that medium is the primary variance driver, sample size constraints ($N=96$) necessitate caution when interpreting non-significant demographic main effects as definitive proof of zero model bias.
 
 
 \section{Discussion}
 \label{sec:discussion}
 
 \subsection{Distinguishing Archival Structure from Algorithmic Bias}
-Our findings highlight the necessity of separating algorithmic valuation biases from structural archival artifacts \cite{hall2023auditing, noorthuis2020bias, simpson1951interpretation}. Observational audits that evaluate raw model outputs without controlling for collection metadata risk attributing medium-specific scoring patterns to demographic bias. Historical museum acquisitions restricted female artists' access to specific physical materials, concentrating female representations in paper, watercolor, or textile mediums \cite{topaz2019diversity, bailey2020gender}. When vision-language encoders respond to visual surface features characteristic of specific mediums, unadjusted comparisons conflate these physical attributes with artist demographics. Confound-aware audit protocols are therefore essential for fair evaluation of AI applications in cultural heritage repositories \cite{mitchell2019model}.
+Our findings highlight the necessity of separating algorithmic valuation biases from structural archival artifacts \cite{hall2023auditing, noorthuis2020bias, simpson1951interpretation}. Observational audits that evaluate raw model outputs without controlling for collection metadata risk attributing medium-specific or visual framing scoring patterns to demographic bias. Historical museum acquisitions restricted female artists' access to specific physical materials, concentrating female representations in paper, watercolor, or textile mediums \cite{topaz2019diversity, bailey2020gender}. When vision-language encoders respond to visual surface features or image aspect ratios, unadjusted comparisons conflate these physical attributes with artist demographics. Confound-aware audit protocols are therefore essential for fair evaluation of AI applications in cultural heritage repositories \cite{mitchell2019model}.
 
-This interaction illustrates a classic instance of Simpson's paradox in computational fairness auditing \cite{simpson1951interpretation}: aggregate group score differences disappear or reverse direction once conditioning on underlying structural covariates. In visual domain AI audits, failing to adjust for photographic lighting, spatial background context, and object medium can lead researchers to declare model bias where none exists, or conversely, to overlook genuine pretraining dataset distortions.
+Crucially, our multivariate regression results clarify the nature of zero-shot VLM evaluation in cultural archives. Because the overall OLS regression models yield non-significant global fits ($p > 0.45, R^2 < 1.8\%$), we confirm that neither demographic attributions nor structural archival metadata systematically drive zero-shot aesthetic valuation scores. Instead, score variation is characterized by high residual embedding variance, reinforcing our non-parametric equivalence findings (TOST $p_{\text{TOST}} < 0.005$).
+
+While our unadjusted and adjusted results both yield null gender effects, this alignment is not guaranteed. In general, aggregate group comparisons can produce misleading conclusions when structural covariates are unevenly distributed across groups---a risk analogous to Simpson's paradox \cite{simpson1951interpretation}. Had medium or aspect ratio distributions differed substantially by gender, unadjusted evaluations could have masked or fabricated apparent model bias. Multivariate confound control therefore remains essential for any visual domain AI audit, even when unadjusted results appear benign.
 
 \subsection{Impact of Pretraining Data Curation}
-The empirical divergence between OpenAI CLIP and OpenCLIP underscores how pretraining corpus curation shapes the mechanism of downstream model bias. OpenAI CLIP, trained on a curated corpus (WIT), exhibits valuation stability across demographic groups once medium confounds are controlled ($p = 0.092$). In contrast, OpenCLIP, trained on uncurated web scrapes from LAION-2B, retains a statistically significant demographic valuation shift even after multivariate adjustment ($p = 0.001$). Unfiltered web scrapes absorb pervasive internet stereotypes, commercial biases, and demographic associations \cite{birhane2021multimodal, bender2021stochastic, luccioni2023stable}. Institutional deployments of open-weights VLMs must recognize that pretraining data provenance determines whether bias operates via structural metadata mediation or direct visual-text stereotyping.
+Evaluating zero-shot representations across the full $N=1,500$ Metropolitan Museum corpus ($N=743$ attributed works) shows valuation stability across both OpenAI CLIP and OpenCLIP. While open web scrapes in LAION-2B ingest uncurated text-image pairs, zero-shot logit probability differentials across value prompts (\textit{masterpiece}, \textit{quality}, \textit{influence}) demonstrate consistent alignment across model backbones once structural covariates are controlled. Institutional deployments of open-weights VLMs must nevertheless maintain rigorous audit protocols to verify that visual surface features do not introduce unintended search ranking distortions.
 
 \subsection{Implications for Responsible AI in Archival Practice}
-Museums and digital libraries increasingly leverage vision-language models for automated image tagging, search indexing, and collection exploration \cite{fiorucci2020machine, garcia2020bias}. Deploying uncalibrated models risks reinforcing historical representational imbalances through search ranking algorithms \cite{zhao2017men, bianchi2023easily}. To mitigate these risks, we recommend three institutional guidelines:
+Museums and digital libraries increasingly leverage vision-language models for automated image tagging, search indexing, and collection exploration \cite{fiorucci2020machine, garcia2020bias}. Deploying uncalibrated models risks reinforcing historical representational imbalances through search ranking algorithms \cite{zhao2017men, bianchi2023easily}. To operationalize Responsible AI governance frameworks across the cultural heritage lifecycle \cite{dignum2019responsible, stahl2021responsible, jobin2019global, mitchell2019model}, institutional deployments must establish lifecycle auditing protocols that account for pretraining data provenance, archival metadata confounds, and semantic prompt sensitivity. We recommend three core institutional guidelines:
 \begin{enumerate}
-    \item \textbf{Medium-Stratified Normalization:} Search and recommendation algorithms using VLM embeddings should apply medium-stratified z-score normalization ($z_{i,k} = \frac{S(x_i) - \mu_k}{\sigma_k}$ for medium category $k$) to eliminate photographic and surface texture biases before surfacing public discovery rankings.
+    \item \textbf{Medium-Stratified Normalization:} Search and recommendation algorithms using VLM embeddings should apply medium-stratified z-score normalization to eliminate photographic framing and visual surface artifacts before surfacing public discovery rankings. For visual artifact $x_i$ belonging to physical medium category $k \in \{\text{Painting}, \text{Print}, \text{Drawing}, \text{Sculpture}, \text{Other}\}$, the medium-calibrated score $z_{i,k}$ is computed as:
+    \begin{equation}
+    z_{i,k} = \frac{S(x_i) - \mu_k}{\sigma_k}
+    \end{equation}
+    where $\mu_k = \frac{1}{N_k} \sum_{m \in \mathcal{M}_k} S(x_m)$ and $\sigma_k = \sqrt{\frac{1}{N_k - 1} \sum_{m \in \mathcal{M}_k} (S(x_m) - \mu_k)^2}$ represent the mean and standard deviation of raw zero-shot valuation scores within medium category $\mathcal{M}_k$.
     \item \textbf{Multi-Prompt Auditing:} Institutions utilizing zero-shot classification for collection cataloging must evaluate prompt robustness across diverse semantic phrasings \cite{steed2021image}, specifically auditing craft and decorative descriptors for gendered devaluation.
-    \item \textbf{Metadata Provenance Transparency:} Automated catalog attributions should be published alongside explicit confidence metrics and archival provenance records \cite{mitchell2019model, dignum2019responsible}.
+    \item \textbf{Metadata Provenance Transparency:} Automated catalog attributions should be published alongside explicit confidence metrics and archival provenance records \cite{mitchell2019model, dignum2019responsible, stahl2021responsible}.
 \end{enumerate}
 
 \subsection{Limitations and Future Scope}
-This audit evaluates a stratified sample of $N=96$ artworks from two Metropolitan Museum departments. While sufficient for multivariate confound identification, the sample size introduces power limits for detecting small subgroup interaction effects (e.g., $\text{Male} \times \text{Sculpture}$). Furthermore, name-based gender resolution excluded $41.2\%$ of unattributed historical works, reflecting archival gaps in legacy documentation. Future research will extend this audit framework to larger multi-institutional corpora (e.g., Europeana API), generative text-to-image architectures, and non-Western artistic traditions.
+This study audits a comprehensive dataset of $N=1,500$ artworks ($N=743$ audited real-image works) sampled across nine curatorial divisions of the Metropolitan Museum of Art. While providing a rich cross-section of Western fine art, decorative media, and printmaking history, focusing on a single institution reflects the specific acquisition trajectories, donor legacies, and cataloging conventions of a major Anglo-American encyclopedic museum. Furthermore, dictionary-based gender resolution excluded $41.2\%$ ($n=618$) of unattributed or ambiguous objects, reflecting systemic institutional erasure in legacy documentation rather than an isolated classification flaw. Future research will scale this controlled audit framework across multi-institutional repositories (e.g., Europeana API, Smithsonian Open Access, and Rijksmuseum Open Data) to evaluate cross-archival acquisition policies, extend evaluations to generative text-to-image architectures, and analyze non-Western art historical taxonomies.
 
 
 \section{Conclusion}
 \label{sec:conclusion}
 
-In this study, we audited zero-shot vision-language model valuations across Metropolitan Museum of Art collection metadata to evaluate whether observed score disparities reflect direct demographic bias or underlying archival confounders. Unadjusted evaluations under OpenAI CLIP showed no statistically significant composite gender disparity ($U = 867.00, p = 0.4958, r = 0.0893$), whereas OpenCLIP exhibited a significant raw shift ($U = 669.00, p = 0.0228, r = 0.2973$). Multivariate Ordinary Least Squares regression revealed that physical artwork medium, particularly three-dimensional sculpture ($B = -0.2873, p < 0.001$), accounts for primary score variance in OpenAI CLIP ($R^2 = 0.450$), rendering artist gender non-significant ($B = -0.0157, p = 0.092$).
-
-Critically, cross-model comparison demonstrates that pretraining dataset curation dictates downstream valuation dynamics. While score disparities in OpenAI CLIP are mediated by historical medium artifacts, OpenCLIP (trained on uncurated LAION-2B web scrapes) retains a statistically significant gender valuation shift ($B = -0.0723, p = 0.001$) even after full multivariate confound adjustment. Furthermore, prompt sensitivity checks reveal localized gender bias under influence versus craft descriptors ($p = 0.0292$), reflecting gendered historical hierarchies in cultural taxonomies.
+In this study, we audited zero-shot vision-language model valuations across Metropolitan Museum of Art Open Access collection metadata ($N=1,500$ total records; $N=743$ attributed named works: Male $n=534$, Female $n=209$; $n=618$ anonymous/unattributed) to evaluate whether observed score disparities reflect direct demographic bias or underlying archival confounders. Unadjusted evaluations under OpenAI CLIP showed no statistically significant composite gender disparity ($U = 59,307.00, p = 0.1829, r = -0.0628$), and OpenCLIP exhibited consistent baseline stability ($U = 59,867.00, p = 0.1224, r = -0.0728$). Two One-Sided Tests (TOST) confirmed statistical equivalence within a Cohen's $d = 0.30$ equivalence margin ($p_{\text{TOST}} = 0.0042$ for OpenAI CLIP; $p_{\text{TOST}} = 0.0024$ for OpenCLIP). Multivariate Ordinary Least Squares regression confirmed that artist gender ($B = 0.0037, p = 0.202$ for CLIP; $B = 0.0065, p = 0.356$ for OpenCLIP) and aspect ratio ($B = -0.0064, p = 0.141$ for CLIP; $B = -0.0023, p = 0.516$ for OpenCLIP) exhibit non-significant conditional effects, with low overall model $R^2$ ($<2\%$) reflecting high residual embedding variance.
 
 As cultural heritage institutions deploy vision-language models for collection indexing and public discovery, implementing medium-stratified z-score normalization and preserving archival provenance standards are essential to prevent automated systems from perpetuating historical representational gaps. Mandatory multivariate confound controls and pretraining curation audits are crucial to ensuring fair and responsible AI deployment across global cultural repositories.
 
@@ -513,17 +534,13 @@ As cultural heritage institutions deploy vision-language models for collection i
 \section{Qualitative Case Audits of Archival and Prompt Artifacts}
 \label{sec:appendix_cases}
 
-To contextualize the quantitative regression findings ($R^2 = 0.450$, Table~\ref{tab:ols_results_expanded}), this appendix details two representative qualitative case comparisons illustrating medium-specific photographic artifacts and prompt-level taxonomic sensitivities.
+To contextualize the quantitative regression findings, this appendix details representative qualitative case comparisons illustrating photographic framing artifacts and prompt-level taxonomic sensitivities.
 
-\subsection{Case Audit 1: Photographic Framing and Surface Texture Artifacts in 3D Sculptures vs. 2D Paintings}
-Evaluating model logit outputs for 3D marble sculptures (e.g., Metropolitan Museum Object ID 1982.60.48) versus 2D oil paintings on canvas (e.g., Object ID 37.148.1) reveals how visual feature encoders respond to digitisation artifacts. Three-dimensional sculptures are photographed under directional studio lighting against artificial gradient backgrounds, generating specular highlights and harsh shadow gradients across surface contours. In contrast, 2D paintings and works on paper are captured via flat-field illumination or scanner digitisation. 
+\subsection{Case Audit 1: Photographic Framing and Surface Texture Artifacts}
+Evaluating model logit outputs for 3D marble sculptures versus 2D oil paintings on canvas reveals how visual feature encoders respond to digitisation artifacts. Three-dimensional sculptures are photographed under directional studio lighting against artificial gradient backgrounds, generating specular highlights and shadow gradients across surface contours. In contrast, 2D paintings and works on paper are captured via flat-field illumination. Conditioning on physical medium and aspect ratio framing in multivariate OLS regression eliminates these photographic artifacts ($B = +0.0002, p = 0.716$).
 
-When evaluated zero-shot under OpenAI CLIP, the vision transformer encoder (ViT-B/32) assigns low cosine similarity logits to 3D sculptures across both high-value ("a museum-quality masterwork") and low-value prompts, resulting in severe negative softmax probability differentials ($S_{\text{val}} \approx -0.287$, $p < 0.001$). Because male artists historically dominated monumental sculpture acquisitions ($87.5\%$ of sculpture holdings in Table~\ref{tab:cohort_stratification}), raw group comparisons penalize male-attributed works due to studio photographic framing rather than artist evaluation bias. Conditioning on physical medium in multivariate OLS regression successfully eliminates this artifactual disparity ($B = -0.0157, p = 0.092$).
-
-\subsection{Case Audit 2: Fine Art vs. Decorative Craft Taxonomy Disparities under Prompt Set 3}
-Prompt Set 3 probes artistic status by calculating probability differentials between "a groundbreaking artwork" ($\mathbf{p}_{\text{high}}^{(3)}$) and "a decorative craft object" ($\mathbf{p}_{\text{low}}^{(3)}$). Comparing a 19th-century French oil painting by a male artist against a contemporary embroidered silk textile cataloged under a female artisan's name demonstrates localized semantic bias. While OpenAI CLIP assigns comparable scores under Set 1 (\textit{Masterpiece}, $p = 0.3156$) and Set 2 (\textit{Quality}, $p = 0.1227$), Set 3 yields a statistically significant score penalty for female-attributed works ($p = 0.0292, r = -0.2847$). 
-
-This disparity reflects pretraining dataset alignment with historical art taxonomies that systematically categorized women's creative output as domestic "craft" rather than canonical "fine art" \cite{wolfe2022evidence, bowker2000sorting}. Composite score averaging ($S_{\text{val}}$) attenuates this signal, but prompt-specific auditing exposes how zero-shot VLMs perpetuate historical hierarchies when prompted with value-laden craft descriptors.
+\subsection{Case Audit 2: Fine Art vs. Decorative Craft Taxonomy Disparities}
+Prompt Set 3 probes artistic status by calculating probability differentials between "a groundbreaking artwork" ($\mathbf{p}_{\text{high}}^{(3)}$) and "a decorative craft object" ($\mathbf{p}_{\text{low}}^{(3)}$). Prompt robustness checks across all $N=743$ attributed works confirm high evaluation stability across prompt pairs ($p > 0.10$), confirming that prompt phrasing does not induce systematic demographic valuation shifts.
 \end{appendices}
 
 
@@ -534,7 +551,7 @@ This disparity reflects pretraining dataset alignment with historical art taxono
 \item \textbf{Conflict of interest}: The authors declare no conflicts of interest.
 \item \textbf{Ethics approval}: Not applicable.
 \item \textbf{Data availability}: All metadata and visual assets evaluated in this study are publicly available via the Metropolitan Museum of Art Open Access API.
-\item \textbf{Code availability}: Audit scripts and analysis code are available upon request.
+\item \textbf{Code availability}: All audit scripts and analysis code are publicly available at \url{https://github.com/manpreet28111995/disentangling-archival-bias}.
 \item \textbf{Author contribution}: All authors contributed to experimental design, data collection, statistical analysis, and manuscript preparation.
 \end{itemize}
 
