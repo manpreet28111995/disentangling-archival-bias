@@ -1,6 +1,6 @@
 %% BioMed_Central_Bib_Style_v1.01
 
-\begin{thebibliography}{43}
+\begin{thebibliography}{41}
 % BibTex style file: bmc-mathphys.bst (version 2.1), 2014-07-24
 \ifx \bisbn   \undefined \def \bisbn  #1{ISBN #1}\fi
 \ifx \binits  \undefined \def \binits#1{#1}\fi
@@ -621,32 +621,6 @@ gender-guesser: Language-independent name-based gender detection.
 \endbibitem
 
 %%% 39
-\bibitem[\protect\citeauthoryear{Shapiro and Wilk}{1965}]{shapiro1965analysis}
-\begin{barticle}
-\bauthor{\bsnm{Shapiro}, \binits{S.S.}},
-\bauthor{\bsnm{Wilk}, \binits{M.B.}}:
-\batitle{An analysis of variance test for normality (complete samples)}.
-\bjtitle{Biometrika}
-\bvolume{52}(\bissue{3/4}),
-\bfpage{591}--\blpage{611}
-(\byear{1965})
-\end{barticle}
-\endbibitem
-
-%%% 40
-\bibitem[\protect\citeauthoryear{Mann and Whitney}{1947}]{mann1947test}
-\begin{botherref}
-\oauthor{\bsnm{Mann}, \binits{H.B.}},
-\oauthor{\bsnm{Whitney}, \binits{D.R.}}:
-On a test of whether one of two random variables is stochastically larger than
-  the other.
-The Annals of Mathematical Statistics,
-50--60
-(1947)
-\end{botherref}
-\endbibitem
-
-%%% 41
 \bibitem[\protect\citeauthoryear{Lakens}{2017}]{lakens2017equivalence}
 \begin{barticle}
 \bauthor{\bsnm{Lakens}, \binits{D.}}:
@@ -659,19 +633,7 @@ The Annals of Mathematical Statistics,
 \end{barticle}
 \endbibitem
 
-%%% 42
-\bibitem[\protect\citeauthoryear{Cohen}{1988}]{cohen1988statistical}
-\begin{bbook}
-\bauthor{\bsnm{Cohen}, \binits{J.}}:
-\bbtitle{Statistical Power Analysis for the Behavioral Sciences},
-\bedition{2nd} edn.
-\bpublisher{Lawrence Erlbaum Associates},
-\blocation{Hillsdale, NJ}
-(\byear{1988})
-\end{bbook}
-\endbibitem
-
-%%% 43
+%%% 40
 \bibitem[\protect\citeauthoryear{Simpson}{1951}]{simpson1951interpretation}
 \begin{barticle}
 \bauthor{\bsnm{Simpson}, \binits{E.H.}}:
@@ -681,6 +643,20 @@ The Annals of Mathematical Statistics,
 \bfpage{238}--\blpage{241}
 (\byear{1951})
 \end{barticle}
+\endbibitem
+
+%%% 41
+\bibitem[\protect\citeauthoryear{Zhai et~al.}{2023}]{zhai2023sigmoid}
+\begin{bchapter}
+\bauthor{\bsnm{Zhai}, \binits{X.}},
+\bauthor{\bsnm{Mustafa}, \binits{B.}},
+\bauthor{\bsnm{Kolesnikov}, \binits{A.}},
+\bauthor{\bsnm{Beyer}, \binits{L.}}:
+\bctitle{Sigmoid loss for language image pre-training}.
+In: \bbtitle{IEEE/CVF International Conference on Computer Vision (ICCV)},
+pp. \bfpage{11975}--\blpage{11986}
+(\byear{2023})
+\end{bchapter}
 \endbibitem
 
 \end{thebibliography}
