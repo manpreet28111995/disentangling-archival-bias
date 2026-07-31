@@ -1,131 +1,126 @@
-# Disentangling Algorithmic Bias from Archival Artifacts
+# Archival Selection and Prompt-Relative Associations in Vision-Language Models for Museum Collections
 
 [![Paper Target](https://img.shields.io/badge/Journal-AI%20%26%20Society%20(Springer)-blue)](https://www.springer.com/journal/146)
 [![Python Version](https://img.shields.io/badge/Python-3.10%2B-green)](https://www.python.org/)
 [![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
 
-Official repository and audit pipeline for the paper: **"Disentangling Algorithmic Bias from Archival Artifacts: A Controlled Audit of Vision-Language Model Valuation in Metropolitan Museum Archives"** (targeted for *AI & Society: Journal of Knowledge, Culture and Communication*, Springer).
-
----
+Repository for the museum-archive audit accompanying the manuscript **"Archival Selection and Prompt-Relative Associations in Vision-Language Models for Museum Collections."** The manuscript targets *AI & Society: Journal of Knowledge, Culture and Communication*.
 
 ## Overview
 
-This repository provides an end-to-end quantitative audit framework that evaluates representational and aesthetic valuation bias in Vision-Language Models (VLMs)—specifically **OpenAI CLIP** (ViT-B/32) and **OpenCLIP** (LAION-2B)—using digitized artwork metadata and real high-resolution artwork images harvested from the Metropolitan Museum of Art Open Access RESTful API.
+This project studies prompt-relative image-text associations in two vision-language models:
 
-The pipeline isolates demographic main effects (artist gender) from structural collection confounders (physical artwork medium, creation era, and photographic framing aspect ratio) via non-parametric hypothesis testing (Mann-Whitney $U$), rank-biserial effect sizes ($r$), Two One-Sided Tests for equivalence (TOST), bootstrapped 95% confidence intervals, and multivariate Ordinary Least Squares (OLS) regression with HC3 robust standard errors.
+- OpenAI CLIP, ViT-B/32
+- OpenCLIP, ViT-B/32, LAION-2B
 
----
+The audit uses artwork metadata and image assets from the Metropolitan Museum of Art Open Access API. It compares three prompt contrasts involving masterpiece, quality, and influence language. These prompts are treated as separate operational probes, not as validated measures of artistic quality or museum value.
 
-## Dataset Accounting & Real Image Pipeline
+The analysis reports Mann-Whitney tests, rank-biserial effects, bootstrap confidence intervals, TOST mean-equivalence checks, and covariate-adjusted OLS associations with HC3 standard errors. Covariates include physical medium, creation century, and image aspect ratio.
 
-The audit pipeline evaluates primary visual assets downloaded directly from museum API endpoints:
+## Dataset accounting
 
-```
-Harvested RESTful Records (N = 1,500)
-  ├── Unattributed / Anonymous Holdings (n = 618, 41.2%)
-  └── Named Attributed Harvest (n = 882, 58.8%)
-        ├── Excluded (Missing / Broken Image URLs): n = 139 (15.8%)
-        └── Final Audited Real-Image Cohort: N = 743 (534 Male, 209 Female)
-```
-
----
-
-## Pipeline Architecture
-
-```
-1. fetch_met_data.py          -> Harvest RESTful API metadata across 9 curatorial departments (.met_cache)
-2. analyze_representation.py  -> Enrich metadata with gender resolution, century bucketing, and medium classification
-3. clip_audit.py              -> OpenAI CLIP (ViT-B/32) zero-shot audit over real downloaded image assets
-4. openclip_audit.py          -> OpenCLIP (LAION-2B) cross-model audit over real downloaded image assets
+```text
+Raw API harvest:                         N = 1,500
+Unknown or unattributed creators:        n = 618  (41.20%)
+Named-attribution records:               n = 882  (58.80%)
+Named records excluded for image issues: n = 139
+Final image-complete cohort:             N = 743
+  Male-inferred records:                 n = 534
+  Female-inferred records:               n = 209
 ```
 
----
+"Male-inferred" and "female-inferred" describe a name-based analytic category. They do not measure personal gender identity. Unknown, unidentified, unattributed, and anonymous are retained as distinct metadata concepts; aggregate reporting uses "unknown or unattributed" where appropriate.
 
-## Installation & Setup
+## Pipeline
+
+```text
+1. fetch_met_data.py          -> Harvest Met Open Access metadata
+2. analyze_representation.py  -> Classify creator category, century, and medium
+3. clip_audit.py              -> Run OpenAI CLIP image-text scoring
+4. openclip_audit.py          -> Run OpenCLIP image-text scoring
+```
+
+## Installation
 
 ```bash
-# Clone the repository
 git clone https://github.com/manpreet28111995/disentangling-archival-bias.git
 cd disentangling-archival-bias
 
-# Create and activate virtual environment
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
+source venv/bin/activate  # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
----
+## Execution
 
-## Execution Guide
-
-### Step 1: Harvest Metadata from Museum API
-Harvest public domain artwork metadata across 9 curatorial departments (Departments 1, 6, 8, 9, 11, 12, 15, 19, 21):
+### 1. Harvest metadata
 
 ```bash
 python fetch_met_data.py --departments 1 6 8 9 11 12 15 19 21 --max-objects 1500 --out met_metadata.csv
 ```
 
-### Step 2: Perform Archival Representation Audit
-Enrich metadata with artist gender resolution (`gender-guesser` dictionary lookup), temporal century bucketing, and physical medium categorization:
+### 2. Enrich metadata
 
 ```bash
 python analyze_representation.py --in met_metadata.csv --out-dir results
 ```
 
-### Step 3: Run OpenAI CLIP Real-Image Valuation Audit
-Dynamically resolve primary high-resolution image URLs (`primaryImageSmall`), download RGB image tensors, compute image aspect ratios, and evaluate zero-shot probability differential scores across value prompt pairs (*Masterpiece*, *Quality*, *Influence*):
+### 3. Run OpenAI CLIP audit
 
 ```bash
 python clip_audit.py --in results/met_metadata_enriched.csv --out-dir results
 ```
 
-### Step 4: Run OpenCLIP (LAION-2B) Cross-Model Audit
-Perform cross-model validation over real downloaded artwork images using open-weights LAION-2B pretraining backbones:
+### 4. Run OpenCLIP audit
 
 ```bash
 python openclip_audit.py --in results/met_metadata_enriched.csv --out-dir results
 ```
 
----
+## Repository structure
 
-## Repository Structure
-
-```
+```text
 .
-├── Paper/                         # LaTeX manuscript source files (Paper.tex, Letter.tex, Bibliography.bib)
-├── fetch_met_data.py              # Met Open Access API harvester with caching
-├── analyze_representation.py      # Demographic resolution & archival audit script
-├── clip_audit.py                  # OpenAI CLIP (ViT-B/32) real-image audit engine
-├── openclip_audit.py              # OpenCLIP (LAION-2B) real-image cross-model audit engine
-├── met_metadata.csv               # Harvested Met Open Access metadata corpus (N=1,500)
-├── requirements.txt               # Python package dependencies
-├── LICENSE                        # MIT License
-└── README.md                      # Repository documentation
+├── fetch_met_data.py
+├── analyze_representation.py
+├── clip_audit.py
+├── openclip_audit.py
+├── met_metadata.csv
+├── results/
+├── requirements.txt
+├── LICENSE
+└── README.md
 ```
 
----
+`Paper/` contains local manuscript and generated LaTeX artifacts. It is ignored by `.gitignore` and is not part of the tracked code repository.
+
+## Results
+
+Main result files are stored in `results/`:
+
+- `clip_academic_stats_report.txt`
+- `openclip_academic_stats_report.txt`
+- `clip_scores.csv`
+- `openclip_scores.csv`
+- `gender_representation.csv`
+- `gender_by_century.csv`
+- `met_metadata_enriched.csv`
+
+The reported associations apply only to this score instrument, museum collection, and selected named-attribution cohort. They do not establish causal model effects or general fairness.
 
 ## Citation
 
-If you use this codebase, real-image pipeline, or audit framework in your research, please cite our paper:
+If you use this code or results, cite:
 
-### APA 7th Edition
-> Disentangling Algorithmic Bias from Archival Artifacts: A Controlled Audit of Vision-Language Model Valuation in Metropolitan Museum Archives. (2026). *AI & Society: Journal of Knowledge, Culture and Communication*. Springer Nature.
-
-### BibTeX
 ```bibtex
-@article{disentangling_vlm_archival_bias_2026,
-  title     = {Disentangling Algorithmic Bias from Archival Artifacts: A Controlled Audit of Vision-Language Model Valuation in Metropolitan Museum Archives},
-  journal   = {AI \& Society: Journal of Knowledge, Culture and Communication},
+@article{archival_selection_prompt_associations_2026,
+  title     = {Archival Selection and Prompt-Relative Associations in Vision-Language Models for Museum Collections},
+  journal   = {AI \\& Society: Journal of Knowledge, Culture and Communication},
   publisher = {Springer Nature},
   year      = {2026}
 }
 ```
 
----
-
 ## License
 
-Distributed under the MIT License. See [`LICENSE`](LICENSE) for more information.
+Distributed under the MIT License. See [`LICENSE`](LICENSE).
