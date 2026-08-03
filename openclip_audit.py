@@ -24,6 +24,8 @@ from scipy.stats import mannwhitneyu
 import matplotlib.pyplot as plt
 import statsmodels.formula.api as smf
 from transformers import CLIPProcessor, CLIPModel
+from audit_statistics import run_publishable_analysis
+from device_utils import get_device, move_inputs
 
 PROMPT_SETS = {
     "set_1_masterpiece": {
@@ -37,18 +39,22 @@ PROMPT_SETS = {
     "set_3_influence": {
         "high": "a groundbreaking and influential artwork",
         "low": "a decorative craft object"
+    },
+    "set_4_neutral_control": {
+        "high": "a museum-quality masterwork",
+        "low": "an artwork"
     }
 }
 
-NEUTRAL_PROMPTS = ["a painting", "an artwork", "a photograph of art", "a museum object"]
+NEUTRAL_PROMPTS = ["a painting", "a photograph of art", "a museum object"]
 MODEL_NAME = "laion/CLIP-ViT-B-32-laion2B-s34B-b79K"
 
 
-def load_model():
+def load_model(device):
     print(f"Loading OpenCLIP model weights: {MODEL_NAME}...")
     model = CLIPModel.from_pretrained(MODEL_NAME)
     processor = CLIPProcessor.from_pretrained(MODEL_NAME)
-    model.eval()
+    model.to(device).eval()
     return model, processor
 
 
@@ -77,6 +83,9 @@ def resolve_met_image_url(object_id, cache_dir=".met_cache", timeout=10):
     except Exception as e:
         print(f"  [WARN] Met API lookup failed for {object_id}: {e}")
     return None
+
+def image_url(row):
+    return row.get("primaryImageSmall") or row.get("primaryImage") or resolve_met_image_url(row.get("objectID"))
 
 
 def download_image(url, timeout=10, object_id=None):
@@ -107,11 +116,11 @@ def bootstrap_ci(group1, group2, n_boot=1000, ci=95, seed=42):
     return np.mean(diffs), lower, upper
 
 
-def batch_score_images(model, processor, images, prompts, batch_size=32):
+def batch_score_images(model, processor, images, prompts, device, batch_size=32):
     all_probs = []
     for i in range(0, len(images), batch_size):
         batch = images[i:i+batch_size]
-        inputs = processor(text=prompts, images=batch, return_tensors="pt", padding=True)
+        inputs = move_inputs(processor(text=prompts, images=batch, return_tensors="pt", padding=True), device)
         with torch.no_grad():
             outputs = model(**inputs)
         probs = outputs.logits_per_image.softmax(dim=1).cpu().numpy()
@@ -126,10 +135,12 @@ def main():
     args = parser.parse_args()
 
     os.makedirs(args.out_dir, exist_ok=True)
+    device = get_device()
+    print(f"Using device: {device}")
     df = pd.read_csv(args.infile)
     print(f"Loaded {len(df)} artwork metadata records for OpenCLIP audit.")
 
-    model, processor = load_model()
+    model, processor = load_model(device)
 
     all_prompts = []
     for pset in PROMPT_SETS.values():
@@ -139,17 +150,24 @@ def main():
 
     images = []
     valid_rows = []
+    image_manifest = []
     for _, row in tqdm(df.iterrows(), total=len(df), desc="Loading images for OpenCLIP"):
         oid = row.get("objectID")
-        real_url = resolve_met_image_url(oid)
+        real_url = image_url(row)
         img = download_image(real_url, object_id=oid)
+        image_manifest.append({
+            "objectID": oid,
+            "source_image_url": real_url,
+            "image_status": "included" if img is not None else "excluded_image_unavailable",
+            "model": "OpenCLIP",
+        })
         if img is not None:
             images.append(img)
             valid_rows.append(row)
     print(f"Successfully loaded {len(images)} / {len(df)} images")
 
     print(f"Executing batch OpenCLIP inference for {len(images)} images...")
-    probs_list = batch_score_images(model, processor, images, all_prompts, batch_size=32)
+    probs_list = batch_score_images(model, processor, images, all_prompts, device, batch_size=32)
 
     records = []
     for row, img, probs in zip(valid_rows, images, probs_list):
@@ -157,6 +175,7 @@ def main():
 
         rec = {
             "objectID": row["objectID"],
+            "department": row.get("department"),
             "title": row.get("title"),
             "artistDisplayName": row.get("artistDisplayName"),
             "inferred_gender": row.get("inferred_gender"),
@@ -177,6 +196,9 @@ def main():
         records.append(rec)
 
     results = pd.DataFrame(records)
+    pd.DataFrame(image_manifest).to_csv(
+        os.path.join(args.out_dir, "openclip_image_manifest.csv"), index=False
+    )
     results.to_csv(os.path.join(args.out_dir, "openclip_scores.csv"), index=False)
     print(f"Saved {len(results)} scored images to openclip_scores.csv")
 
@@ -248,6 +270,8 @@ def main():
     plt.tight_layout()
     fig.savefig(os.path.join(args.out_dir, "openclip_bias_boxplot.png"), dpi=150)
     plt.close(fig)
+
+    run_publishable_analysis(results, "OpenCLIP", args.out_dir)
 
     print(f"Saved OpenCLIP audit report and plots to {args.out_dir}/")
 

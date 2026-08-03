@@ -67,7 +67,7 @@ def century_bucket(begin_date):
         return "unknown"
     if year == 0:
         return "unknown"
-    century = (abs(year) // 100 + 1)
+    century = ((abs(year) - 1) // 100 + 1)
     era = "BCE" if year < 0 else "CE"
     return f"{century}th c. {era}"
 
@@ -99,9 +99,20 @@ def main():
     # Drop rows with no attributed artist at all (anonymous / workshop objects)
     named = df[df["artistDisplayName"].notna() & (df["artistDisplayName"].str.strip() != "")].copy()
 
-    named["inferred_gender"] = named.apply(resolve_gender, axis=1)
-    named["century"] = named["objectBeginDate"].apply(century_bucket)
-    named["medium_category"] = named["medium"].apply(categorize_medium)
+    # Keep all real records for visual audit; named subset powers metadata summaries.
+    df["inferred_gender"] = df.apply(resolve_gender, axis=1)
+    df["century"] = df["objectBeginDate"].apply(century_bucket)
+    df["medium_category"] = df["medium"].apply(categorize_medium)
+    named = df.loc[named.index].copy()
+
+    # Reproduction manifest: preserve every real Met object ID and selection state.
+    manifest = df[[c for c in ["objectID", "title", "department", "primaryImage", "primaryImageSmall"] if c in df.columns]].copy()
+    manifest["has_named_creator"] = manifest.objectID.isin(named.objectID)
+    manifest["inferred_gender"] = manifest.objectID.map(named.set_index("objectID")["inferred_gender"])
+    manifest["selection_stage"] = manifest.has_named_creator.map(
+        {True: "named_attribution", False: "unknown_or_unattributed"}
+    )
+    manifest.to_csv(os.path.join(args.out_dir, "object_selection_manifest.csv"), index=False)
 
     # --- Gender representation summary ---
     gender_counts = named["inferred_gender"].value_counts(normalize=True) * 100
@@ -138,9 +149,9 @@ def main():
     fig2.savefig(os.path.join(args.out_dir, "nationality_representation.png"), dpi=150)
 
     # Save the enriched dataframe (with inferred gender + century) for the next stage
-    named.to_csv(os.path.join(args.out_dir, "met_metadata_enriched.csv"), index=False)
+    df.to_csv(os.path.join(args.out_dir, "met_metadata_enriched.csv"), index=False)
 
-    print(f"\nSaved summary tables, charts, and enriched CSV to '{args.out_dir}/'")
+    print(f"\nSaved summary tables, charts, object manifest, and enriched CSV to '{args.out_dir}/'")
 
 
 if __name__ == "__main__":

@@ -1,0 +1,6 @@
+metric,value
+objects,445.0
+models,4.0
+mean_cross_model_sd,0.8702691836210278
+mean_prompt_sd,1.9715402494263492
+mean_risk_score,3.102252070991508

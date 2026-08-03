@@ -9,61 +9,50 @@
 \begin{document}
 
 \begin{flushright}
-\textbf{Date:} July 24, 2026 \\
+\textbf{Date:} July 31, 2026
 \end{flushright}
 
-\textbf{From:} \\
-Manpreet Singh \\
-Boston University \\
-Boston, MA, 02215, USA \\
-\href{mailto:manni@bu.edu}{manni@bu.edu} \\
+\textbf{To:} Guest Editors: Dr. Lydia Farina, Prof. Bernd Stahl, and Dr. Helena Webb\\
+Special Issue on ``Responsible use of AI in Art Creation and Archival Practice''\\
+\textit{AI \& Society: Journal of Knowledge, Culture and Communication}
 
+\vspace{1em}
 
-\textbf{To:} \\
-Guest Editors: Dr. Lydia Farina, Prof. Bernd Stahl, Dr. Helena Webb \\
-Special Issue on ``Responsible use of AI in Art Creation and Archival Practice'' \\
-\textit{AI \& Society: Journal of Knowledge, Culture and Communication} \\
-Springer Nature \\
-
-\vspace{.5em}
-
-\noindent \textbf{SUBJECT:} Submission of Original Manuscript to Special Issue: \textit{Disentangling Algorithmic Bias from Archival Artifacts: A Controlled Audit of Vision-Language Model Valuation in Metropolitan Museum Archives}
+\noindent\textbf{Subject:} Submission of ``Archival Selection and Prompt-Relative Associations in Vision-Language Models for Museum Collections''
 
 \vspace{1em}
 
 Dear Dr. Farina, Prof. Stahl, Dr. Webb, and Editorial Board,
 
-We submit our original research manuscript titled \textbf{``Disentangling Algorithmic Bias from Archival Artifacts: A Controlled Audit of Vision-Language Model Valuation in Metropolitan Museum Archives''} for consideration in the Special Issue on \textbf{``Responsible use of AI in Art Creation and Archival Practice''} in \textit{AI \& Society: Journal of Knowledge, Culture and Communication}.
+We submit our original research manuscript, ``Archival Selection and Prompt-Relative Associations in Vision-Language Models for Museum Collections,'' for consideration in the special issue on ``Responsible use of AI in Art Creation and Archival Practice'' in \textit{AI \& Society}.
 
-As vision-language models (VLMs) such as Contrastive Language-Image Pre-training (CLIP) are deployed across digital library indexing, museum collection search interfaces, and computational art history, auditing these systems for socio-cultural bias is vital for responsible AI governance in cultural heritage. A primary methodological challenge in archival AI auditing is distinguishing direct model evaluation disparities from confounding variables embedded within historical metadata—such as historical gender imbalances in physical artwork media (e.g., oil painting versus paper or textiles).
+The paper examines whether apparent demographic differences in vision-language model scores may reflect the composition of museum metadata rather than a direct model association. We audit 1,500 records from the Metropolitan Museum of Art Open Access collection. After excluding records with unknown or unattributed creators and named-attribution records without usable images, the final evaluation cohort contains 743 works, including 534 male-inferred and 209 female-inferred records. Creator categories are inferred from metadata and names; they are name-inferred creator categories, not measures of personal gender identity.
 
-In this study, we establish a controlled quantitative audit framework evaluating zero-shot aesthetic valuation differential scores across OpenAI CLIP (trained on curated web data) and OpenCLIP (trained on uncurated LAION-2B web scrapes) using artwork metadata harvested from the Metropolitan Museum of Art Open Access API ($N=1,500$ harvested objects: $n=618$ unattributed/anonymous; $n=139$ missing/broken image URLs; final audited cohort $N=743$ attributed works, Male $n=534$, Female $n=209$).
+We compare OpenAI CLIP, pretrained on OpenAI's WebImageText dataset, with OpenCLIP, pretrained on LAION-2B. Across prompt-relative score comparisons, neither model shows a statistically detectable association with the name-inferred creator category. TOST supports equivalence of the tested mean contrast within the prespecified standardized bound of $d=0.30$, while adjusted OLS models show no detectable conditional association after accounting for medium, creation era, and aspect ratio. The paper does not interpret these results as proof of model fairness. Instead, it shows how cohort selection, missing attribution, prompt choice, and coarse score instruments limit what an archival audit can establish.
 
-Key contributions and empirical findings include:
-\begin{itemize}
-    \item \textbf{Unadjusted Model Auditing:} Baseline evaluations reveal no statistically significant difference in composite artistic value scores between male ($\mu = -0.0035$) and female ($\mu = -0.0067$) artists under OpenAI CLIP ($U = 59,307.00$, $p = 0.1829$, rank-biserial $r = -0.0628$) or OpenCLIP ($\mu_M = 0.0237, \mu_F = 0.0171$, $U = 59,867.00$, $p = 0.1224$, $r = -0.0728$).
-    \item \textbf{Statistical Equivalence Testing (TOST):} Two One-Sided Tests confirm formal statistical score equivalence within a Cohen's $d = 0.30$ margin ($p_{\text{TOST}} = 0.0042$ for OpenAI CLIP; $p_{\text{TOST}} = 0.0024$ for OpenCLIP).
-    \item \textbf{Multivariate Confound Control:} Ordinary Least Squares (OLS) regression controlling for artwork medium, creation era, and aspect ratio ($R^2 = 0.018, p = 0.512$ for CLIP; $R^2 = 0.017, p = 0.455$ for OpenCLIP) demonstrates artist gender exhibits no statistically significant main effect post-adjustment ($B = 0.0037, p = 0.202$ in CLIP; $B = 0.0065, p = 0.356$ in OpenCLIP), with low overall $R^2$ ($<1.8\%$) reflecting high residual embedding variance.
-    \item \textbf{Responsible AI Archival Governance:} We propose institutional guidelines for digital archives, including medium-stratified z-score calibration ($z_{i,k} = \frac{S(x_i) - \mu_k}{\sigma_k}$) and multi-prompt sensitivity auditing to prevent automated cataloging systems from distorting public search rankings.
-\end{itemize}
-
-Given this Special Issue's focus on responsible AI frameworks for arts and cultural archives, our work provides an empirical methodology to prevent automated cataloging systems from amplifying historical representational gaps.
+The manuscript fits the special issue because it connects model auditing with the provenance and representational limits of cultural heritage data. It also gives practical recommendations for reporting cohort construction, testing prompt sensitivity, and calibrating scores within relevant medium strata.
 
 We confirm that:
+
 \begin{enumerate}
     \item This work is original and is not under consideration, accepted, or published elsewhere.
     \item All authors have read and approved the manuscript for submission.
-    \item There are no conflicts of interest to declare.
+    \item We have no conflicts of interest to declare.
 \end{enumerate}
 
-Thank you for your time and consideration.
-
-\vspace{1.5em}
-
-\noindent Sincerely,
+Thank you for considering our submission.
 
 \vspace{1em}
-\noindent Manpreet Singh \\
-\noindent Boston University
+
+\noindent Sincerely,\\[0.5em]
+\noindent Manpreet Singh\\
+\noindent Boston University\\
+\noindent Submitting Author
+
+\vspace{0.75em}
+
+\noindent Rahul Joshi\\
+\noindent Symbiosis Institute of Technology, Symbiosis International University\\
+\noindent Corresponding Author
 
 \end{document}

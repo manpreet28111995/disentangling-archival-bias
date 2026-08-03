@@ -1,0 +1,56 @@
+OpenCLIP publication analysis
+========================================================================
+Interpretation: name-inferred creator category; not gender identity.
+Scope: image-complete named-attribution cohort only; no population or causal claim.
+
+Prompt comparisons (male minus female; primary p-values and Bonferroni p-values):
+                  score  n_male  n_female  male_mean  female_mean  mean_difference_male_minus_female    ci_low  ci_high  mann_whitney_u  p_value  rank_biserial_r  tost_p_d03  tost_bound  bonferroni_p  permutation_p_10000
+score_set_1_masterpiece      39        22   0.080691     0.014635                           0.066332  0.015305 0.127652           724.0 0.000010        -0.687646    0.817664    0.040091      0.000039             0.058494
+    score_set_2_quality      39        22   0.025182     0.101318                          -0.076105 -0.192353 0.021717           398.0 0.646888         0.072261    0.597997    0.062026      1.000000             0.176882
+  score_set_3_influence      39        22  -0.017048    -0.080533                           0.063789 -0.007813 0.151116           634.0 0.002130        -0.477855    0.716679    0.039007      0.008521             0.059694
+       mean_value_score      39        22  -0.073175    -0.030744                          -0.042399 -0.109187 0.020584           327.0 0.127393         0.237762    0.557274    0.037534      0.509571             0.216778
+
+Primary HC3 OLS model:
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:       mean_value_score   R-squared:                       0.283
+Model:                            OLS   Adj. R-squared:                  0.023
+Method:                 Least Squares   F-statistic:                    0.7035
+Date:                Mon, 03 Aug 2026   Prob (F-statistic):              0.775
+Time:                        17:23:24   Log-Likelihood:                 50.585
+No. Observations:                  61   AIC:                            -67.17
+Df Residuals:                      44   BIC:                            -31.29
+Df Model:                          16                                         
+Covariance Type:                  HC3                                         
+==================================================================================================
+                                     coef    std err          z      P>|z|      [0.025      0.975]
+--------------------------------------------------------------------------------------------------
+Intercept                         -0.0666      0.104     -0.639      0.523      -0.271       0.138
+C(inferred_gender)[T.male]        -0.0709      0.053     -1.334      0.182      -0.175       0.033
+C(medium_category)[T.other]        0.1284      0.084      1.536      0.125      -0.035       0.292
+C(medium_category)[T.painting]     0.0514      0.077      0.670      0.503      -0.099       0.202
+C(century)[T.15th c. CE]           0.0661      0.064      1.026      0.305      -0.060       0.192
+C(century)[T.16th c. CE]           0.0883      0.077      1.152      0.249      -0.062       0.238
+C(century)[T.17th c. CE]           0.0480      0.179      0.268      0.789      -0.303       0.399
+C(century)[T.18th c. CE]           0.0372      0.069      0.537      0.591      -0.099       0.173
+C(century)[T.19th c. CE]           0.1321      0.070      1.889      0.059      -0.005       0.269
+C(century)[T.20th c. CE]          -0.1871      0.629     -0.298      0.766      -1.420       1.045
+C(century)[T.2th c. CE]           -0.0122      1.205     -0.010      0.992      -2.374       2.350
+C(century)[T.3th c. CE]           -0.0907      0.598     -0.152      0.879      -1.262       1.081
+C(century)[T.4th c. CE]           -0.0193      0.078     -0.248      0.804      -0.171       0.133
+C(century)[T.5th c. CE]           -0.0214      0.483     -0.044      0.965      -0.968       0.925
+C(century)[T.6th c. CE]           -0.0238      0.076     -0.312      0.755      -0.173       0.126
+C(century)[T.7th c. CE]           -0.0441      0.815     -0.054      0.957      -1.642       1.554
+aspect_ratio                      -0.0894      0.062     -1.434      0.151      -0.212       0.033
+==============================================================================
+Omnibus:                        2.751   Durbin-Watson:                   2.256
+Prob(Omnibus):                  0.253   Jarque-Bera (JB):                2.441
+Skew:                           0.488   Prob(JB):                        0.295
+Kurtosis:                       2.913   Cond. No.                         26.1
+==============================================================================
+
+Notes:
+[1] Standard Errors are heteroscedasticity robust (HC3)
+
+Sensitivity models saved separately: exclude sculpture; pool sculpture with other.
+Permutation p-values use 10,000 label shuffles; leave-one-department-out results saved separately.

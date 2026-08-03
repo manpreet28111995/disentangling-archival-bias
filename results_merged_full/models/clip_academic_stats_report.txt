@@ -1,0 +1,118 @@
+============================================================
+ACADEMIC BIAS AUDIT REPORT: CLIP ARTISTIC VALUE SCORES
+============================================================
+
+1. NON-PARAMETRIC TEST (MALE vs FEMALE)
+   Male (N=39): mean=-0.0423, std=0.0787
+   Female (N=21): mean=-0.1470, std=0.1014
+   Mann-Whitney U = 636.00, p-value = 4.6072e-04
+   Rank-Biserial Correlation r = -0.5531
+
+2. BOOTSTRAP 95% CONFIDENCE INTERVAL (MALE MEAN - FEMALE MEAN)
+   Mean Difference = 0.1048
+   95% CI = [0.0520, 0.1526]
+
+3. PROMPT SET ROBUSTNESS CHECK
+   [set_1_masterpiece] Male mean=-0.0060 | Female mean=-0.0026 | p=0.6756 | r=0.0672
+   [set_2_quality] Male mean=0.0387 | Female mean=0.0299 | p=0.4476 | r=0.1209
+   [set_3_influence] Male mean=-0.1595 | Female mean=-0.4682 | p=0.0003 | r=-0.5726
+
+4. MULTIVARIATE OLS REGRESSION (CONFOUND CONTROL)
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:       mean_value_score   R-squared:                       0.674
+Model:                            OLS   Adj. R-squared:                  0.613
+Method:                 Least Squares   F-statistic:                     109.9
+Date:                Mon, 03 Aug 2026   Prob (F-statistic):           5.03e-83
+Time:                        04:34:28   Log-Likelihood:                 239.04
+No. Observations:                 173   AIC:                            -422.1
+Df Residuals:                     145   BIC:                            -333.8
+Df Model:                          27                                         
+Covariance Type:                  HC3                                         
+==================================================================================================
+                                     coef    std err          z      P>|z|      [0.025      0.975]
+--------------------------------------------------------------------------------------------------
+Intercept                          0.0023      2.313      0.001      0.999      -4.531       4.535
+C(inferred_gender)[T.male]        -0.0172      0.024     -0.722      0.470      -0.064       0.030
+C(inferred_gender)[T.unknown]     -0.0418      0.024     -1.780      0.075      -0.088       0.004
+C(medium_category)[T.other]       -0.1261      0.024     -5.362      0.000      -0.172      -0.080
+C(medium_category)[T.painting]     0.0312      0.018      1.697      0.090      -0.005       0.067
+C(medium_category)[T.print]       -0.0466      0.063     -0.743      0.457      -0.169       0.076
+C(century)[T.10th c. CE]          -0.0974      2.313     -0.042      0.966      -4.631       4.436
+C(century)[T.11th c. CE]          -0.0632      4.459     -0.014      0.989      -8.803       8.677
+C(century)[T.13th c. CE]          -0.0479      2.313     -0.021      0.983      -4.581       4.485
+C(century)[T.14th c. CE]          -0.0612      2.313     -0.026      0.979      -4.594       4.471
+C(century)[T.15th c. CE]          -0.0419      2.313     -0.018      0.986      -4.575       4.491
+C(century)[T.16th c. CE]          -0.0172      2.313     -0.007      0.994      -4.550       4.515
+C(century)[T.17th c. CE]          -0.0306      2.313     -0.013      0.989      -4.563       4.502
+C(century)[T.18th c. CE]          -0.0690      2.313     -0.030      0.976      -4.602       4.464
+C(century)[T.19th c. CE]          -0.0494      2.313     -0.021      0.983      -4.582       4.483
+C(century)[T.20th c. CE]          -0.1979      3.788     -0.052      0.958      -7.622       7.226
+C(century)[T.2th c. BCE]          -0.1341      2.333     -0.057      0.954      -4.706       4.438
+C(century)[T.2th c. CE]           -0.1142      2.340     -0.049      0.961      -4.701       4.473
+C(century)[T.3th c. BCE]          -0.1180      2.313     -0.051      0.959      -4.650       4.414
+C(century)[T.3th c. CE]           -0.0970      2.313     -0.042      0.967      -4.630       4.436
+C(century)[T.4th c. BCE]          -0.0054      2.313     -0.002      0.998      -4.538       4.527
+C(century)[T.4th c. CE]           -0.1779      2.313     -0.077      0.939      -4.711       4.355
+C(century)[T.5th c. CE]           -0.1008      2.313     -0.044      0.965      -4.634       4.432
+C(century)[T.6th c. CE]           -0.1222      2.313     -0.053      0.958      -4.655       4.411
+C(century)[T.7th c. CE]           -0.0806      2.313     -0.035      0.972      -4.613       4.452
+C(century)[T.8th c. CE]           -0.0272      2.316     -0.012      0.991      -4.567       4.513
+C(century)[T.unknown]             -0.1311      2.313     -0.057      0.955      -4.665       4.403
+aspect_ratio                       0.0363      0.016      2.324      0.020       0.006       0.067
+==============================================================================
+Omnibus:                        8.528   Durbin-Watson:                   2.056
+Prob(Omnibus):                  0.014   Jarque-Bera (JB):               11.912
+Skew:                           0.290   Prob(JB):                      0.00259
+Kurtosis:                       4.147   Cond. No.                         106.
+==============================================================================
+
+Notes:
+[1] Standard Errors are heteroscedasticity robust (HC3)
+
+HUBER ROBUST LINEAR MODEL (RLM) CROSS-VALIDATION:
+                    Robust linear Model Regression Results                    
+==============================================================================
+Dep. Variable:       mean_value_score   No. Observations:                  173
+Model:                            RLM   Df Residuals:                      145
+Method:                          IRLS   Df Model:                           27
+Norm:                          HuberT                                         
+Scale Est.:                       mad                                         
+Cov Type:                          H1                                         
+Date:                Mon, 03 Aug 2026                                         
+Time:                        04:34:29                                         
+No. Iterations:                    36                                         
+==================================================================================================
+                                     coef    std err          z      P>|z|      [0.025      0.975]
+--------------------------------------------------------------------------------------------------
+Intercept                          0.0392      0.065      0.605      0.545      -0.088       0.166
+C(inferred_gender)[T.male]        -0.0296      0.020     -1.474      0.140      -0.069       0.010
+C(inferred_gender)[T.unknown]     -0.0557      0.018     -3.067      0.002      -0.091      -0.020
+C(medium_category)[T.other]       -0.1461      0.014    -10.245      0.000      -0.174      -0.118
+C(medium_category)[T.painting]     0.0263      0.016      1.651      0.099      -0.005       0.058
+C(medium_category)[T.print]       -0.0682      0.033     -2.081      0.037      -0.132      -0.004
+C(century)[T.10th c. CE]          -0.0958      0.072     -1.327      0.185      -0.237       0.046
+C(century)[T.11th c. CE]          -0.0784      0.086     -0.911      0.362      -0.247       0.090
+C(century)[T.13th c. CE]          -0.0577      0.072     -0.797      0.425      -0.200       0.084
+C(century)[T.14th c. CE]          -0.0783      0.062     -1.264      0.206      -0.200       0.043
+C(century)[T.15th c. CE]          -0.0571      0.062     -0.928      0.354      -0.178       0.064
+C(century)[T.16th c. CE]          -0.0362      0.062     -0.580      0.562      -0.159       0.086
+C(century)[T.17th c. CE]          -0.0490      0.061     -0.797      0.426      -0.169       0.071
+C(century)[T.18th c. CE]          -0.0824      0.061     -1.344      0.179      -0.203       0.038
+C(century)[T.19th c. CE]          -0.0640      0.060     -1.060      0.289      -0.182       0.054
+C(century)[T.20th c. CE]          -0.2117      0.085     -2.485      0.013      -0.379      -0.045
+C(century)[T.2th c. BCE]          -0.1315      0.084     -1.573      0.116      -0.295       0.032
+C(century)[T.2th c. CE]           -0.1126      0.083     -1.351      0.177      -0.276       0.051
+C(century)[T.3th c. BCE]          -0.1165      0.066     -1.765      0.078      -0.246       0.013
+C(century)[T.3th c. CE]           -0.1008      0.068     -1.477      0.140      -0.235       0.033
+C(century)[T.4th c. BCE]          -0.0050      0.068     -0.073      0.942      -0.138       0.128
+C(century)[T.4th c. CE]           -0.1914      0.074     -2.575      0.010      -0.337      -0.046
+C(century)[T.5th c. CE]           -0.1169      0.069     -1.701      0.089      -0.252       0.018
+C(century)[T.6th c. CE]           -0.1222      0.072     -1.695      0.090      -0.263       0.019
+C(century)[T.7th c. CE]           -0.0837      0.063     -1.337      0.181      -0.206       0.039
+C(century)[T.8th c. CE]           -0.0933      0.069     -1.357      0.175      -0.228       0.041
+C(century)[T.unknown]             -0.1268      0.073     -1.726      0.084      -0.271       0.017
+aspect_ratio                       0.0321      0.014      2.343      0.019       0.005       0.059
+==================================================================================================
+
+If the model instance has been used for another fit with different fit parameters, then the fit options might not be the correct ones anymore .

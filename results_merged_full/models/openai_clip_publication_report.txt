@@ -1,0 +1,54 @@
+OpenAI_CLIP publication analysis
+========================================================================
+Interpretation: name-inferred creator category; not gender identity.
+Scope: image-complete named-attribution cohort only; no population or causal claim.
+
+Prompt comparisons (male minus female; primary p-values and Bonferroni p-values):
+                  score  n_male  n_female  male_mean  female_mean  mean_difference_male_minus_female    ci_low  ci_high  mann_whitney_u  p_value  rank_biserial_r  tost_p_d03  tost_bound  bonferroni_p
+score_set_1_masterpiece      39        21  -0.006030    -0.002619                          -0.003329 -0.009619 0.001889           382.0 0.675615         0.067155    0.390953    0.004236      1.000000
+    score_set_2_quality      39        21   0.038668     0.029917                           0.008878 -0.014885 0.034166           360.0 0.447604         0.120879    0.253173    0.017223      1.000000
+  score_set_3_influence      39        21  -0.159537    -0.468153                           0.310321  0.170313 0.446468           644.0 0.000287        -0.572650    0.998249    0.075913      0.001149
+       mean_value_score      39        21  -0.042299    -0.146952                           0.105290  0.057936 0.152716           636.0 0.000461        -0.553114    0.997954    0.026149      0.001843
+
+Primary HC3 OLS model:
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:       mean_value_score   R-squared:                       0.806
+Model:                            OLS   Adj. R-squared:                  0.740
+Method:                 Least Squares   F-statistic:                     1902.
+Date:                Mon, 03 Aug 2026   Prob (F-statistic):           1.02e-56
+Time:                        04:34:31   Log-Likelihood:                 102.68
+No. Observations:                  60   AIC:                            -173.4
+Df Residuals:                      44   BIC:                            -139.8
+Df Model:                          15                                         
+Covariance Type:                  HC3                                         
+==================================================================================================
+                                     coef    std err          z      P>|z|      [0.025      0.975]
+--------------------------------------------------------------------------------------------------
+Intercept                         -0.1374      0.072     -1.909      0.056      -0.278       0.004
+C(inferred_gender)[T.male]        -0.0267      0.032     -0.838      0.402      -0.089       0.036
+C(medium_category)[T.other]       -0.0869      0.072     -1.207      0.227      -0.228       0.054
+C(medium_category)[T.painting]     0.0704      0.063      1.109      0.267      -0.054       0.195
+C(century)[T.15th c. CE]           0.0246      0.040      0.619      0.536      -0.053       0.102
+C(century)[T.16th c. CE]           0.0490      0.047      1.043      0.297      -0.043       0.141
+C(century)[T.17th c. CE]           0.1303      0.065      1.993      0.046       0.002       0.258
+C(century)[T.18th c. CE]          -0.0024      0.047     -0.052      0.959      -0.095       0.091
+C(century)[T.19th c. CE]           0.0110      0.058      0.188      0.851      -0.104       0.126
+C(century)[T.20th c. CE]          -0.1324      0.092     -1.443      0.149      -0.312       0.047
+C(century)[T.3th c. CE]            0.0347      0.149      0.233      0.815      -0.257       0.326
+C(century)[T.4th c. CE]           -0.1147      0.048     -2.412      0.016      -0.208      -0.021
+C(century)[T.5th c. CE]           -0.0592      0.054     -1.100      0.271      -0.165       0.046
+C(century)[T.7th c. CE]           -0.0398      0.052     -0.760      0.447      -0.143       0.063
+C(century)[T.8th c. CE]           -0.0278      1.026     -0.027      0.978      -2.039       1.983
+aspect_ratio                       0.0829      0.023      3.558      0.000       0.037       0.129
+==============================================================================
+Omnibus:                        1.455   Durbin-Watson:                   2.504
+Prob(Omnibus):                  0.483   Jarque-Bera (JB):                0.836
+Skew:                          -0.257   Prob(JB):                        0.658
+Kurtosis:                       3.265   Cond. No.                         24.7
+==============================================================================
+
+Notes:
+[1] Standard Errors are heteroscedasticity robust (HC3)
+
+Sensitivity models saved separately: exclude sculpture; pool sculpture with other.

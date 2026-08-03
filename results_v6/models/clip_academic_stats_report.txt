@@ -1,0 +1,173 @@
+============================================================
+ACADEMIC BIAS AUDIT REPORT: CLIP ARTISTIC VALUE SCORES
+============================================================
+
+1. NON-PARAMETRIC TEST (MALE vs FEMALE)
+   Male (N=39): mean=-0.0235, std=0.0651
+   Female (N=22): mean=-0.0989, std=0.0802
+   Mann-Whitney U = 656.00, p-value = 6.6923e-04
+   Rank-Biserial Correlation r = -0.5291
+
+2. BOOTSTRAP 95% CONFIDENCE INTERVAL (MALE MEAN - FEMALE MEAN)
+   Mean Difference = 0.0748
+   95% CI = [0.0351, 0.1121]
+
+3. PROMPT SET ROBUSTNESS CHECK
+   [set_1_masterpiece] Male mean=-0.0060 | Female mean=-0.0036 | p=0.8747 | r=0.0256
+   [set_2_quality] Male mean=0.0387 | Female mean=0.0291 | p=0.4756 | r=0.1119
+   [set_3_influence] Male mean=-0.1595 | Female mean=-0.4476 | p=0.0006 | r=-0.5315
+   [set_4_neutral_control] Male mean=0.0327 | Female mean=0.0265 | p=0.5135 | r=0.1026
+
+4. MULTIVARIATE OLS REGRESSION (CONFOUND CONTROL)
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:       mean_value_score   R-squared:                       0.377
+Model:                            OLS   Adj. R-squared:                  0.291
+Method:                 Least Squares   F-statistic:                     9.525
+Date:                Mon, 03 Aug 2026   Prob (F-statistic):           1.35e-44
+Time:                        17:16:05   Log-Likelihood:                 602.38
+No. Observations:                 445   AIC:                            -1095.
+Df Residuals:                     390   BIC:                            -869.4
+Df Model:                          54                                         
+Covariance Type:                  HC3                                         
+===================================================================================================
+                                      coef    std err          z      P>|z|      [0.025      0.975]
+---------------------------------------------------------------------------------------------------
+Intercept                           0.0466      0.244      0.191      0.849      -0.432       0.525
+C(inferred_gender)[T.male]          0.0004      0.016      0.025      0.980      -0.031       0.032
+C(inferred_gender)[T.unknown]      -0.0279      0.014     -2.047      0.041      -0.055      -0.001
+C(medium_category)[T.other]        -0.0740      0.014     -5.381      0.000      -0.101      -0.047
+C(medium_category)[T.painting]      0.0144      0.016      0.893      0.372      -0.017       0.046
+C(medium_category)[T.print]        -0.0266      0.041     -0.645      0.519      -0.107       0.054
+C(medium_category)[T.sculpture]    -0.0106      0.035     -0.300      0.764      -0.080       0.059
+C(century)[T.10th c. CE]           -0.0320      0.266     -0.120      0.904      -0.553       0.489
+C(century)[T.11th c. CE]           -0.0551      0.245     -0.225      0.822      -0.534       0.424
+C(century)[T.12th c. BCE]          -0.0866      0.447     -0.194      0.846      -0.963       0.790
+C(century)[T.12th c. CE]           -0.0981      0.245     -0.401      0.689      -0.578       0.382
+C(century)[T.13th c. CE]           -0.0574      0.244     -0.235      0.814      -0.535       0.420
+C(century)[T.14th c. BCE]          -0.0823      0.247     -0.334      0.739      -0.566       0.401
+C(century)[T.14th c. CE]           -0.0794      0.244     -0.326      0.744      -0.557       0.398
+C(century)[T.15th c. BCE]          -0.1665      0.244     -0.682      0.496      -0.645       0.312
+C(century)[T.15th c. CE]           -0.0562      0.244     -0.231      0.818      -0.534       0.422
+C(century)[T.16th c. BCE]          -0.1087      0.248     -0.438      0.662      -0.595       0.378
+C(century)[T.16th c. CE]           -0.0601      0.244     -0.246      0.805      -0.538       0.418
+C(century)[T.17th c. BCE]          -0.0357      0.431     -0.083      0.934      -0.880       0.809
+C(century)[T.17th c. CE]           -0.0675      0.244     -0.277      0.782      -0.546       0.411
+C(century)[T.18th c. BCE]          -0.0915      0.245     -0.374      0.708      -0.571       0.388
+C(century)[T.18th c. CE]           -0.0900      0.244     -0.369      0.712      -0.568       0.388
+C(century)[T.19th c. BCE]          -0.0326      0.315     -0.104      0.918      -0.650       0.585
+C(century)[T.19th c. CE]           -0.0763      0.244     -0.313      0.754      -0.554       0.401
+C(century)[T.1th c. BCE]           -0.0521      0.244     -0.213      0.831      -0.531       0.427
+C(century)[T.1th c. CE]            -0.0795      0.245     -0.325      0.745      -0.559       0.400
+C(century)[T.20th c. BCE]           0.0425      0.368      0.116      0.908      -0.679       0.764
+C(century)[T.20th c. CE]           -0.2014      0.295     -0.682      0.495      -0.780       0.377
+C(century)[T.21th c. BCE]          -0.0373      0.749     -0.050      0.960      -1.505       1.431
+C(century)[T.23th c. BCE]          -0.0958      0.246     -0.390      0.697      -0.577       0.386
+C(century)[T.26th c. BCE]          -0.0682      0.254     -0.268      0.789      -0.567       0.430
+C(century)[T.2th c. BCE]           -0.0539      0.245     -0.220      0.826      -0.534       0.426
+C(century)[T.2th c. CE]            -0.0956      0.244     -0.392      0.695      -0.574       0.383
+C(century)[T.30th c. BCE]          -0.1222      0.244     -0.502      0.616      -0.600       0.355
+C(century)[T.31th c. BCE]           0.0490      0.249      0.197      0.844      -0.440       0.538
+C(century)[T.3th c. BCE]           -0.0256      0.248     -0.103      0.918      -0.511       0.460
+C(century)[T.3th c. CE]            -0.0918      0.255     -0.360      0.719      -0.592       0.409
+C(century)[T.40th c. BCE]          -0.1311      0.246     -0.532      0.595      -0.614       0.352
+C(century)[T.45th c. BCE]          -0.1416      0.259     -0.547      0.584      -0.649       0.366
+C(century)[T.46th c. BCE]          -0.1643      0.307     -0.535      0.593      -0.766       0.438
+C(century)[T.4th c. BCE]           -0.0816      0.245     -0.334      0.739      -0.561       0.398
+C(century)[T.4th c. CE]            -0.1278      0.245     -0.523      0.601      -0.607       0.352
+C(century)[T.56th c. BCE]          -0.0666      0.243     -0.274      0.784      -0.544       0.410
+C(century)[T.5th c. BCE]           -0.1405      2.263     -0.062      0.950      -4.576       4.295
+C(century)[T.5th c. CE]            -0.1368      0.244     -0.561      0.575      -0.614       0.341
+C(century)[T.6th c. BCE]           -0.0625      0.270     -0.231      0.817      -0.592       0.467
+C(century)[T.6th c. CE]            -0.1198      0.243     -0.492      0.623      -0.597       0.357
+C(century)[T.7th c. BCE]           -0.0438      0.248     -0.176      0.860      -0.530       0.443
+C(century)[T.7th c. CE]            -0.0912      0.244     -0.374      0.708      -0.569       0.387
+C(century)[T.8th c. BCE]           -0.0640      0.244     -0.262      0.793      -0.543       0.415
+C(century)[T.8th c. CE]            -0.0762      0.249     -0.305      0.760      -0.565       0.412
+C(century)[T.9th c. BCE]           -0.0320      0.244     -0.131      0.896      -0.509       0.445
+C(century)[T.9th c. CE]            -0.0791      0.245     -0.323      0.746      -0.559       0.400
+C(century)[T.unknown]              -0.0995      0.245     -0.406      0.684      -0.579       0.380
+aspect_ratio                        0.0116      0.009      1.300      0.193      -0.006       0.029
+==============================================================================
+Omnibus:                        9.720   Durbin-Watson:                   1.967
+Prob(Omnibus):                  0.008   Jarque-Bera (JB):                9.715
+Skew:                           0.340   Prob(JB):                      0.00777
+Kurtosis:                       3.245   Cond. No.                         274.
+==============================================================================
+
+Notes:
+[1] Standard Errors are heteroscedasticity robust (HC3)
+
+HUBER ROBUST LINEAR MODEL (RLM) CROSS-VALIDATION:
+                    Robust linear Model Regression Results                    
+==============================================================================
+Dep. Variable:       mean_value_score   No. Observations:                  445
+Model:                            RLM   Df Residuals:                      390
+Method:                          IRLS   Df Model:                           54
+Norm:                          HuberT                                         
+Scale Est.:                       mad                                         
+Cov Type:                          H1                                         
+Date:                Mon, 03 Aug 2026                                         
+Time:                        17:16:05                                         
+No. Iterations:                    24                                         
+===================================================================================================
+                                      coef    std err          z      P>|z|      [0.025      0.975]
+---------------------------------------------------------------------------------------------------
+Intercept                           0.0528      0.072      0.730      0.465      -0.089       0.195
+C(inferred_gender)[T.male]         -0.0004      0.020     -0.022      0.983      -0.040       0.039
+C(inferred_gender)[T.unknown]      -0.0312      0.017     -1.846      0.065      -0.064       0.002
+C(medium_category)[T.other]        -0.0791      0.013     -6.068      0.000      -0.105      -0.054
+C(medium_category)[T.painting]      0.0102      0.016      0.626      0.531      -0.022       0.042
+C(medium_category)[T.print]        -0.0328      0.034     -0.965      0.334      -0.099       0.034
+C(medium_category)[T.sculpture]    -0.0113      0.028     -0.397      0.692      -0.067       0.044
+C(century)[T.10th c. CE]           -0.0320      0.084     -0.381      0.703      -0.197       0.133
+C(century)[T.11th c. CE]           -0.0579      0.077     -0.751      0.452      -0.209       0.093
+C(century)[T.12th c. BCE]          -0.0873      0.097     -0.899      0.369      -0.278       0.103
+C(century)[T.12th c. CE]           -0.1036      0.076     -1.372      0.170      -0.252       0.044
+C(century)[T.13th c. CE]           -0.0668      0.070     -0.956      0.339      -0.204       0.070
+C(century)[T.14th c. BCE]          -0.0832      0.077     -1.080      0.280      -0.234       0.068
+C(century)[T.14th c. CE]           -0.0824      0.070     -1.183      0.237      -0.219       0.054
+C(century)[T.15th c. BCE]          -0.1687      0.080     -2.112      0.035      -0.325      -0.012
+C(century)[T.15th c. CE]           -0.0598      0.070     -0.851      0.395      -0.198       0.078
+C(century)[T.16th c. BCE]          -0.1092      0.084     -1.298      0.194      -0.274       0.056
+C(century)[T.16th c. CE]           -0.0595      0.070     -0.844      0.399      -0.198       0.079
+C(century)[T.17th c. BCE]          -0.0372      0.097     -0.382      0.702      -0.228       0.153
+C(century)[T.17th c. CE]           -0.0763      0.071     -1.081      0.280      -0.215       0.062
+C(century)[T.18th c. BCE]          -0.0873      0.072     -1.212      0.225      -0.228       0.054
+C(century)[T.18th c. CE]           -0.0963      0.070     -1.369      0.171      -0.234       0.042
+C(century)[T.19th c. BCE]          -0.0341      0.097     -0.351      0.725      -0.225       0.156
+C(century)[T.19th c. CE]           -0.0810      0.070     -1.161      0.245      -0.218       0.056
+C(century)[T.1th c. BCE]           -0.0514      0.072     -0.713      0.476      -0.193       0.090
+C(century)[T.1th c. CE]            -0.0843      0.072     -1.169      0.242      -0.226       0.057
+C(century)[T.20th c. BCE]           0.0416      0.097      0.428      0.668      -0.149       0.232
+C(century)[T.20th c. CE]           -0.2047      0.099     -2.076      0.038      -0.398      -0.011
+C(century)[T.21th c. BCE]          -0.0374      0.097     -0.385      0.700      -0.228       0.153
+C(century)[T.23th c. BCE]          -0.0886      0.074     -1.194      0.232      -0.234       0.057
+C(century)[T.26th c. BCE]          -0.0683      0.097     -0.703      0.482      -0.259       0.122
+C(century)[T.2th c. BCE]           -0.0510      0.072     -0.710      0.478      -0.192       0.090
+C(century)[T.2th c. CE]            -0.0985      0.073     -1.356      0.175      -0.241       0.044
+C(century)[T.30th c. BCE]          -0.1223      0.097     -1.259      0.208      -0.313       0.068
+C(century)[T.31th c. BCE]           0.0490      0.097      0.504      0.614      -0.141       0.239
+C(century)[T.3th c. BCE]           -0.0149      0.077     -0.194      0.846      -0.165       0.136
+C(century)[T.3th c. CE]            -0.1107      0.080     -1.393      0.164      -0.267       0.045
+C(century)[T.40th c. BCE]          -0.1322      0.084     -1.571      0.116      -0.297       0.033
+C(century)[T.45th c. BCE]          -0.1417      0.097     -1.460      0.144      -0.332       0.049
+C(century)[T.46th c. BCE]          -0.1651      0.097     -1.699      0.089      -0.355       0.025
+C(century)[T.4th c. BCE]           -0.0793      0.074     -1.079      0.281      -0.224       0.065
+C(century)[T.4th c. CE]            -0.1306      0.073     -1.779      0.075      -0.275       0.013
+C(century)[T.56th c. BCE]          -0.0668      0.097     -0.688      0.492      -0.257       0.124
+C(century)[T.5th c. BCE]           -0.1422      0.097     -1.462      0.144      -0.333       0.048
+C(century)[T.5th c. CE]            -0.1395      0.072     -1.934      0.053      -0.281       0.002
+C(century)[T.6th c. BCE]           -0.0657      0.085     -0.775      0.438      -0.232       0.100
+C(century)[T.6th c. CE]            -0.1210      0.072     -1.685      0.092      -0.262       0.020
+C(century)[T.7th c. BCE]           -0.0574      0.077     -0.747      0.455      -0.208       0.093
+C(century)[T.7th c. CE]            -0.0923      0.077     -1.200      0.230      -0.243       0.058
+C(century)[T.8th c. BCE]           -0.0776      0.071     -1.097      0.273      -0.216       0.061
+C(century)[T.8th c. CE]            -0.1046      0.075     -1.389      0.165      -0.252       0.043
+C(century)[T.9th c. BCE]           -0.0333      0.070     -0.479      0.632      -0.170       0.103
+C(century)[T.9th c. CE]            -0.0816      0.073     -1.125      0.260      -0.224       0.061
+C(century)[T.unknown]              -0.1032      0.074     -1.389      0.165      -0.249       0.042
+aspect_ratio                        0.0145      0.010      1.502      0.133      -0.004       0.033
+===================================================================================================
+
+If the model instance has been used for another fit with different fit parameters, then the fit options might not be the correct ones anymore .

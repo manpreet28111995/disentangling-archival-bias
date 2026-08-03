@@ -22,13 +22,26 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 BASE = "https://collectionapi.metmuseum.org/public/collection/v1"
 CACHE_DIR = ".met_cache"
 
-SEARCH_QUERIES = ["painting", "drawing", "print", "photograph", "sculpture", "woman", "female", "portrait", "art", "artist"]
+SEARCH_QUERIES = [
+    "painting", "drawing", "print", "photograph", "sculpture", "textile",
+    "ceramic", "furniture", "instrument", "object", "artwork", "museum",
+    "woman", "female", "portrait", "art", "artist", "collection",
+]
 
 
 def get_object_ids(department_ids, queries=SEARCH_QUERIES, has_images_only=True):
-    """Return a list of unique objectIDs across departments and queries."""
+    """Return real Met objectIDs using department-wide listing plus keyword fallback."""
     all_ids = set()
+    ordered_ids = []
     session = requests.Session()
+    def add_ids(ids):
+        for object_id in ids:
+            if object_id not in all_ids:
+                all_ids.add(object_id)
+                ordered_ids.append(object_id)
+
+    # Image-filtered keyword results first. These are much better candidates than
+    # low-numbered IDs from the broad endpoint, which often lack images.
     for dept in department_ids:
         for q in queries:
             params = {"departmentId": dept, "q": q}
@@ -39,11 +52,25 @@ def get_object_ids(department_ids, queries=SEARCH_QUERIES, has_images_only=True)
                 if resp.status_code == 200:
                     data = resp.json()
                     ids = data.get("objectIDs") or []
-                    all_ids.update(ids)
+                    add_ids(ids)
             except Exception as e:
                 print(f"Error searching dept {dept} with query '{q}': {e}")
-    print(f"Total unique candidate objects found across {len(department_ids)} departments: {len(all_ids)}")
-    return list(all_ids)
+
+    # Add department-wide IDs after image-filtered candidates for coverage.
+    try:
+        response = session.get(
+            f"{BASE}/objects",
+            params={"departmentIds": "|".join(map(str, department_ids))},
+            timeout=30,
+        )
+        if response.status_code == 200:
+            add_ids(response.json().get("objectIDs") or [])
+            print(f"Department-wide API listing added candidates; total: {len(ordered_ids)}.")
+    except Exception as e:
+        print(f"Department-wide API listing failed: {e}")
+
+    print(f"Total ordered candidate objects: {len(ordered_ids)}")
+    return ordered_ids
 
 
 def fetch_object(object_id, cache_dir=CACHE_DIR):
@@ -95,10 +122,7 @@ def extract_row(obj):
     }
 
 
-def build_dataframe(object_ids, max_objects=4000, num_workers=10):
-    if max_objects:
-        object_ids = object_ids[:max_objects]
-
+def build_dataframe(object_ids, num_workers=10):
     rows = []
     with ThreadPoolExecutor(max_workers=num_workers) as executor:
         futures = {executor.submit(fetch_object, oid): oid for oid in object_ids}
@@ -112,20 +136,18 @@ def build_dataframe(object_ids, max_objects=4000, num_workers=10):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--departments", nargs="+", type=int, default=[1, 6, 8, 9, 11, 12, 15, 19, 21],
+    parser.add_argument("--departments", nargs="+", type=int,
+                        default=list(range(1, 26)),
                          help="Met department IDs to pull from")
-    parser.add_argument("--max-objects", type=int, default=4000,
-                         help="Cap on number of candidate objects to check")
     parser.add_argument("--out", type=str, default="met_metadata.csv")
     parser.add_argument("--workers", type=int, default=12)
     args = parser.parse_args()
 
     object_ids = get_object_ids(args.departments)
-    df = build_dataframe(object_ids, max_objects=args.max_objects, num_workers=args.workers)
+    df = build_dataframe(object_ids, num_workers=args.workers)
     df.to_csv(args.out, index=False)
     print(f"\nSaved {len(df)} objects with images to {args.out}")
 
 
 if __name__ == "__main__":
     main()
-

@@ -36,8 +36,9 @@ Final image-complete cohort:             N = 743
 ```text
 1. fetch_met_data.py          -> Harvest Met Open Access metadata
 2. analyze_representation.py  -> Classify creator category, century, and medium
-3. clip_audit.py              -> Run OpenAI CLIP image-text scoring
-4. openclip_audit.py          -> Run OpenCLIP image-text scoring
+3. clip_audit.py              -> Run OpenAI CLIP image-text scoring and publication diagnostics
+4. openclip_audit.py          -> Run OpenCLIP image-text scoring and publication diagnostics
+5. additional_model_audit.py  -> Run scale/objective sensitivity models
 ```
 
 ## Installation
@@ -51,12 +52,41 @@ source venv/bin/activate  # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
+To continue an interrupted run, add `--resume`; completed stages with intact output files are skipped.
+
 ## Execution
+
+### Complete four-model run from scratch
+
+```bash
+python run_experiment.py --out-dir results_full_run --harvest-only
+```
+
+On Apple Silicon, code automatically uses `mps`; otherwise it falls back to
+CUDA or CPU. Unsupported MPS operations use CPU fallback.
+
+This single command fetches real Metropolitan Museum API records, enriches
+metadata, runs OpenAI CLIP, OpenCLIP ViT-B/32, OpenCLIP ViT-L/14, and SigLIP,
+then writes scores, object IDs, image manifests, statistical tables, sensitivity
+analyses, and publication reports under `results_full_run/`. OpenAI CLIP image
+validation defines one locked objectID cohort reused by all four models.
+
+Run the complete experiment from an existing real merged dataset:
+
+```bash
+python3 run_experiment.py \
+  --metadata met_metadata_merged.csv \
+  --out-dir results_merged_full
+```
+Harvest uses Met departments 1–25, department-wide `/objects` listing plus keyword fallbacks. Run
+reports exact real primary-image count; no synthetic records used.
+Each completed run writes `appendix.md` with runtime query details, software and
+device versions, model IDs, prompts, counts, object-ID manifests, and output paths.
 
 ### 1. Harvest metadata
 
 ```bash
-python fetch_met_data.py --departments 1 6 8 9 11 12 15 19 21 --max-objects 1500 --out met_metadata.csv
+python fetch_met_data.py --departments 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 --out met_metadata.csv
 ```
 
 ### 2. Enrich metadata
@@ -75,7 +105,27 @@ python clip_audit.py --in results/met_metadata_enriched.csv --out-dir results
 
 ```bash
 python openclip_audit.py --in results/met_metadata_enriched.csv --out-dir results
+
+# Additional model: scale sensitivity
+python additional_model_audit.py --in results/met_metadata_enriched.csv --out-dir results \
+  --model-name laion/CLIP-ViT-L-14-laion2B-s32B-b82K --label OpenCLIP_L14
+
+# Additional model: different contrastive objective
+python additional_model_audit.py --in results/met_metadata_enriched.csv --out-dir results \
+  --model-name google/siglip-base-patch16-224 --label SigLIP
 ```
+
+Both audits use the full real-image cohort by default. Optional exploratory
+subsampling is available only for OpenAI CLIP with `--n-female` and `--n-male`.
+Each audit also writes prompt-level comparisons with Bonferroni-adjusted p-values,
+TOST results, evaluation counts, and regression sensitivity tables.
+Additional models use the exact same real object cohort and prompts. SigLIP scores
+use logit differences rather than CLIP softmax probabilities because SigLIP uses
+independent sigmoid-style image-text scores; model results must therefore be
+interpreted as model-specific prompt contrasts.
+All records come from the Metropolitan Museum Open Access API. The pipeline does
+not generate synthetic objects. Object IDs and real image URLs are preserved in
+`object_selection_manifest.csv` and model-specific image manifests for reproduction.
 
 ## Repository structure
 
@@ -102,11 +152,28 @@ Main result files are stored in `results/`:
 - `openclip_academic_stats_report.txt`
 - `clip_scores.csv`
 - `openclip_scores.csv`
+- `openai_clip_prompt_comparisons.csv`
+- `openclip_prompt_comparisons.csv`
+- `openai_clip_regression_sensitivity.csv`
+- `openclip_regression_sensitivity.csv`
+- `openai_clip_publication_report.txt`
+- `openclip_publication_report.txt`
 - `gender_representation.csv`
 - `gender_by_century.csv`
 - `met_metadata_enriched.csv`
+- `object_selection_manifest.csv`
+- `openai_clip_image_manifest.csv`
+- `openclip_image_manifest.csv`
+- `openclip_l14_image_manifest.csv`
+- `siglip_image_manifest.csv`
 
-The reported associations apply only to this score instrument, museum collection, and selected named-attribution cohort. They do not establish causal model effects or general fairness.
+The reported associations apply only to tested score instruments and this museum collection. Gender analyses use named-attribution records; visual audits include unknown/unattributed works. They do not establish causal model effects or general fairness.
+
+## Reproducibility
+
+Code, analysis outputs, and reproducibility materials are available at the anonymous repository:
+
+[https://anonymous.4open.science/r/disentangling-archival-bias-138F/](https://anonymous.4open.science/r/disentangling-archival-bias-138F/)
 
 ## Citation
 
