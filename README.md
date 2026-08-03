@@ -59,7 +59,7 @@ To continue an interrupted run, add `--resume`; completed stages with intact out
 ### Complete four-model run from scratch
 
 ```bash
-python run_experiment.py --out-dir results_full_run --harvest-only
+python src/run_experiment.py --out-dir results_full_run --harvest-only
 ```
 
 On Apple Silicon, code automatically uses `mps`; otherwise it falls back to
@@ -74,7 +74,7 @@ validation defines one locked objectID cohort reused by all four models.
 Run the complete experiment from an existing real merged dataset:
 
 ```bash
-python3 run_experiment.py \
+python3 src/run_experiment.py \
   --metadata met_metadata_merged.csv \
   --out-dir results_merged_full
 ```
@@ -86,32 +86,32 @@ device versions, model IDs, prompts, counts, object-ID manifests, and output pat
 ### 1. Harvest metadata
 
 ```bash
-python fetch_met_data.py --departments 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 --out met_metadata.csv
+python src/fetch_met_data.py --departments 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 --out met_metadata.csv
 ```
 
 ### 2. Enrich metadata
 
 ```bash
-python analyze_representation.py --in met_metadata.csv --out-dir results
+python src/analyze_representation.py --in met_metadata.csv --out-dir results
 ```
 
 ### 3. Run OpenAI CLIP audit
 
 ```bash
-python clip_audit.py --in results/met_metadata_enriched.csv --out-dir results
+python src/clip_audit.py --in results/met_metadata_enriched.csv --out-dir results
 ```
 
 ### 4. Run OpenCLIP audit
 
 ```bash
-python openclip_audit.py --in results/met_metadata_enriched.csv --out-dir results
+python src/openclip_audit.py --in results/met_metadata_enriched.csv --out-dir results
 
 # Additional model: scale sensitivity
-python additional_model_audit.py --in results/met_metadata_enriched.csv --out-dir results \
+python src/additional_model_audit.py --in results/met_metadata_enriched.csv --out-dir results \
   --model-name laion/CLIP-ViT-L-14-laion2B-s32B-b82K --label OpenCLIP_L14
 
 # Additional model: different contrastive objective
-python additional_model_audit.py --in results/met_metadata_enriched.csv --out-dir results \
+python src/additional_model_audit.py --in results/met_metadata_enriched.csv --out-dir results \
   --model-name google/siglip-base-patch16-224 --label SigLIP
 ```
 
@@ -131,10 +131,13 @@ not generate synthetic objects. Object IDs and real image URLs are preserved in
 
 ```text
 .
-├── fetch_met_data.py
-├── analyze_representation.py
-├── clip_audit.py
-├── openclip_audit.py
+├── src/
+│   ├── fetch_met_data.py
+│   ├── analyze_representation.py
+│   ├── model_audit.py
+│   ├── clip_audit.py
+│   ├── openclip_audit.py
+│   └── run_experiment.py
 ├── met_metadata.csv
 ├── results/
 ├── requirements.txt

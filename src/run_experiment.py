@@ -14,7 +14,8 @@ import pandas as pd
 import torch
 
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parent.parent
+SRC = ROOT / "src"
 
 
 def run(command):
@@ -33,7 +34,7 @@ def write_appendix(out, args, raw, cohort, results):
         f"Python: `{platform.python_version()}`", f"PyTorch: `{torch.__version__}`",
         f"Runtime device: `{device}`", "", "## Exact command", "",
         "```bash",
-        f"python3 run_experiment.py --out-dir {args.out_dir} --harvest-only",
+        f"python3 src/run_experiment.py --out-dir {args.out_dir} --harvest-only",
         "```", "", "## Metropolitan Museum API query", "",
         "- Base: `https://collectionapi.metmuseum.org/public/collection/v1`",
         f"- Departments: `{', '.join(map(str, args.departments))}`",
@@ -93,14 +94,14 @@ def main():
         print(f"Reusing existing metadata: {raw}")
     else:
         run([
-            sys.executable, "fetch_met_data.py",
+            sys.executable, str(SRC / "fetch_met_data.py"),
             "--departments", *map(str, args.departments),
             "--out", str(raw),
         ])
     enriched = enriched_dir / "met_metadata_enriched.csv"
     if not (args.resume and enriched.exists()):
         run([
-            sys.executable, "analyze_representation.py",
+            sys.executable, str(SRC / "analyze_representation.py"),
             "--in", str(raw),
             "--out-dir", str(enriched_dir),
         ])
@@ -114,7 +115,7 @@ def main():
     clip_scores = results / "clip_scores.csv"
     clip_manifest = results / "openai_clip_image_manifest.csv"
     if not (args.resume and clip_scores.exists() and clip_manifest.exists()):
-        run([sys.executable, "clip_audit.py", "--in", str(enriched), "--out-dir", str(results)])
+        run([sys.executable, str(SRC / "clip_audit.py"), "--in", str(enriched), "--out-dir", str(results)])
     else:
         print("Reusing OpenAI CLIP results")
     # Lock one real-image objectID cohort for every model.
@@ -139,10 +140,10 @@ def main():
         if args.resume and score_file.exists() and manifest_file.exists():
             print(f"Reusing {label} results")
             continue
-        run([sys.executable, *command, "--in", str(cohort_path), "--out-dir", str(results)])
+        run([sys.executable, str(SRC / command[0]), *command[1:], "--in", str(cohort_path), "--out-dir", str(results)])
     novelty_dir = results / "novelty"
     if not (args.resume and (novelty_dir / "consensus_summary.csv").exists()):
-        run([sys.executable, "novelty_analysis.py", "--models", str(results),
+        run([sys.executable, str(SRC / "novelty_analysis.py"), "--models", str(results),
              "--metadata", str(cohort_path), "--out-dir", str(novelty_dir)])
     else:
         print("Reusing novelty analysis")

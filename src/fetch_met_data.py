@@ -7,7 +7,7 @@ Pulls object metadata from the Metropolitan Museum of Art's Open Access API
 Docs: https://metmuseum.github.io/
 
 Usage:
-    python fetch_met_data.py --departments 1 6 8 9 11 12 15 19 21 --max-objects 4000 --out met_metadata.csv
+    python src/fetch_met_data.py --departments 1 6 8 9 11 12 15 19 21 --max-objects 4000 --out met_metadata.csv
 """
 
 import argparse

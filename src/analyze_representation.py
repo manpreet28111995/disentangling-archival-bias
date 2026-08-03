@@ -8,7 +8,7 @@ Audits representation gaps in the fetched Met Museum metadata:
 - How these gaps shift over historical period
 
 Usage:
-    python analyze_representation.py --in met_metadata.csv --out-dir results
+    python src/analyze_representation.py --in met_metadata.csv --out-dir results
 """
 
 import argparse
